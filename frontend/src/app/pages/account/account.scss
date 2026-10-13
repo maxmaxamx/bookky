@@ -1,0 +1,86 @@
+@reference '../../../styles.css';
+
+.account-page {
+  @apply px-5 pt-14 pb-20 sm:px-8 lg:pt-20 lg:pb-24;
+}
+
+.account__shell {
+  @apply mx-auto w-full max-w-5xl;
+}
+
+.account__head {
+  @apply flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.account__title {
+  @apply font-display text-cream mt-4 text-4xl leading-tight font-light sm:text-5xl;
+}
+
+.account__lead {
+  @apply text-muted mt-3 text-sm;
+}
+
+.account__list {
+  @apply mt-6 divide-y divide-white/10;
+}
+
+.account__booking {
+  @apply grid gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_auto] sm:items-center;
+}
+
+.account__when {
+  @apply border-l border-gold-400/50 pl-4;
+}
+
+.account__date {
+  @apply text-cream text-sm;
+}
+
+.account__time {
+  @apply text-gold-300 mt-1 font-display text-2xl;
+}
+
+.account__details {
+  @apply flex flex-col gap-1 text-sm;
+}
+
+.account__details strong {
+  @apply text-cream font-medium;
+}
+
+.account__details > span:not(.account__status) {
+  @apply text-muted text-xs;
+}
+
+.account__status {
+  @apply mt-1 text-xs;
+}
+
+.account__status--pending {
+  @apply text-gold-200;
+}
+
+.account__status--confirmed {
+  @apply text-emerald-200;
+}
+
+.account__status--cancelled {
+  @apply text-red-200;
+}
+
+.account__cancel {
+  @apply justify-start px-0 text-red-200/80 hover:text-red-200 sm:justify-self-end;
+}
+
+.account__state,
+.account__empty {
+  @apply mt-6 border border-white/10 bg-ink-900/50 px-5 py-10 text-center text-sm text-muted;
+}
+
+.account__empty a {
+  @apply text-gold-300 hover:text-gold-100 mt-3 inline-block underline underline-offset-4;
+}
+
+.account__error {
+  @apply mt-5 border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm text-red-200;
+}

@@ -1,0 +1,106 @@
+<div class="flex flex-col gap-6">
+  <!-- Быстрый выбор даты -->
+  <div class="dp-quick">
+    @for (day of quickPicks(); track day.getTime()) {
+      <button type="button" [class]="chipClass(day)" (click)="select(day)">
+        {{ shortLabel(day) }}
+        <span class="dp-chip__note">МСК</span>
+      </button>
+    }
+  </div>
+
+  <div class="dp-layout">
+    <!-- Календарь -->
+    <div class="dp-calendar">
+      <header class="flex items-center justify-between gap-2">
+        <button
+          class="dp-nav"
+          type="button"
+          [disabled]="!canGoBack()"
+          aria-label="Предыдущий месяц"
+          (click)="prevMonth()"
+        >
+          <svg
+            class="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+
+        <p class="dp-month">{{ monthLabel() }}</p>
+
+        <button
+          class="dp-nav"
+          type="button"
+          [disabled]="!canGoForward()"
+          aria-label="Следующий месяц"
+          (click)="nextMonth()"
+        >
+          <svg
+            class="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="dp-grid mt-4">
+        @for (label of weekdayHeaders; track label) {
+          <span class="dp-weekday">{{ label }}</span>
+        }
+      </div>
+
+      <div class="dp-grid mt-1">
+        @for (week of weeks(); track $index) {
+          @for (day of week; track $index) {
+            @if (day) {
+              <button
+                type="button"
+                [class]="dayClass(day)"
+                [disabled]="isUnavailable(day)"
+                [attr.aria-pressed]="isSelected(day)"
+                [attr.aria-label]="dayAria(day)"
+                (click)="select(day)"
+              >
+                {{ day.getDate() }}
+              </button>
+            } @else {
+              <span aria-hidden="true"></span>
+            }
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Легенда и выбранная дата -->
+    <div class="flex flex-col justify-between gap-6">
+      <div>
+        <p class="eyebrow">Выбранная дата</p>
+        <p class="dp-selected">{{ selectedLabel() }}</p>
+        <p class="text-muted mt-2 text-sm">
+          Пятница и суббота бронируются быстрее — выбирайте заранее.
+        </p>
+      </div>
+
+      <ul class="dp-legend">
+        <li><span class="dp-legend__dot dp-legend__dot--today"></span>Сегодня</li>
+        <li><span class="dp-legend__dot dp-legend__dot--on"></span>Ваш выбор</li>
+        <li><span class="dp-legend__dot"></span>Недоступно · понедельник — выходной</li>
+      </ul>
+    </div>
+  </div>
+</div>

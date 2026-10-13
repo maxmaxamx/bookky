@@ -1,0 +1,35 @@
+<section class="surface bs" [class.bs--done]="done()">
+  <header class="bs__head">
+    <span
+      [class]="'bs__badge ' + (done() ? 'bs__badge--done' : 'bs__badge--idle')"
+      aria-hidden="true"
+    >
+      @if (done()) {
+        <svg
+          class="size-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M20 6 9 17l-5-5" />
+        </svg>
+      } @else {
+        {{ step() }}
+      }
+    </span>
+
+    <div class="min-w-0">
+      <h2 class="bs__title">{{ title() }}</h2>
+      @if (hint()) {
+        <p class="bs__hint">{{ hint() }}</p>
+      }
+    </div>
+  </header>
+
+  <div class="bs__body">
+    <ng-content />
+  </div>
+</section>

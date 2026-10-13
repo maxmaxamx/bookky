@@ -1,0 +1,55 @@
+<footer class="ft">
+  <div class="ft__inner">
+    <div class="ft__grid">
+      <div class="ft__brand">
+        <app-logo [showTagline]="true" />
+        <p class="ft__about">
+          Сезонные продукты, открытый огонь и авторская подача. Мы создаём вечер, который хочется
+          повторить — бронируйте столик заранее.
+        </p>
+        <div class="ft__socials">
+          @for (social of socials; track social.label) {
+            <a class="ft__social" [href]="social.href" target="_blank" rel="noopener noreferrer">{{
+              social.label
+            }}</a>
+          }
+        </div>
+      </div>
+
+      <nav aria-label="Навигация в футере">
+        <h2 class="eyebrow">Навигация</h2>
+        <ul class="ft__list">
+          @for (item of navItems; track item.label) {
+            <li>
+              <a class="ft__link" [routerLink]="item.link" [fragment]="item.fragment">{{
+                item.label
+              }}</a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="eyebrow">Контакты</h2>
+        <ul class="ft__list ft__list--about">
+          <li>{{ site.address }}</li>
+          <li>
+            <a class="ft__contactLink" [href]="site.phoneHref">{{ site.phoneDisplay }}</a>
+          </li>
+          <li>
+            <a class="ft__contactLink" [href]="'mailto:' + site.email">{{ site.email }}</a>
+          </li>
+          <li class="ft__hours">{{ site.hours }}</li>
+          <li class="ft__note">{{ site.closedNote }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hairline my-10"></div>
+
+    <div class="ft__bottom">
+      <p>© {{ year }} {{ site.name }}. Все права защищены.</p>
+      <a class="ft__bottomLink" routerLink="/booking"> Забронировать столик </a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,108 @@
+<section class="bk">
+  <div class="bk__shell">
+    <!-- Заголовок страницы -->
+    <div class="bk__head">
+      <div class="bk__intro">
+        <p class="eyebrow">Резерв стола</p>
+        <h1 class="bk__title">Забронировать столик</h1>
+        <p class="bk__lead">
+          Выберите дату, удобное время и количество гостей. Подтверждение придёт сразу после
+          отправки, а за два часа до визита мы позвоним и уточним детали.
+        </p>
+      </div>
+
+      <ul class="bk__facts">
+        @for (fact of facts; track fact) {
+          <li class="bk__fact">
+            <span class="bk__fact-dot" aria-hidden="true"></span>
+            {{ fact }}
+          </li>
+        }
+      </ul>
+    </div>
+
+    <!-- Шаги бронирования и сводка -->
+    <div class="bk__grid">
+      <div class="bk__steps">
+        <app-booking-step
+          step="01"
+          title="Дата визита"
+          hint="Календарь показывает только доступные дни — понедельник у нас выходной."
+        >
+          <app-date-picker [selected]="date()" (selectedChange)="onDateSelected($event)" />
+        </app-booking-step>
+
+        <app-booking-step
+          step="02"
+          title="Время визита"
+          [hint]="
+            time()
+              ? 'Вы выбрали ' + time() + '. Можно поменять — просто нажмите другой слот.'
+              : 'Нажмите на свободный слот, чтобы выбрать время.'
+          "
+          [done]="time() !== null"
+        >
+          <app-time-slots
+            [date]="date()"
+            [guests]="guests()"
+            [selected]="time()"
+            (selectedChange)="onTimeSelected($event)"
+          />
+        </app-booking-step>
+
+        <app-booking-step
+          step="03"
+          title="Количество гостей"
+          hint="Количество гостей поможет отфильтровать столы по вместимости."
+        >
+          <app-guest-counter [value]="guests()" (valueChange)="onGuestsChange($event)" />
+        </app-booking-step>
+
+        <app-booking-step
+          step="04"
+          title="Столик в зале"
+          hint="Выберите свободный стол на схеме. Занятые и неподходящие по вместимости столы недоступны."
+          [done]="tableId() !== null"
+        >
+          <app-table-picker
+            [date]="date()"
+            [time]="time()"
+            [guests]="guests()"
+            [selected]="tableId()"
+            (selectedChange)="tableId.set($event)"
+          />
+        </app-booking-step>
+
+        <app-booking-step
+          step="05"
+          title="Контактные данные"
+          hint="Нужны, чтобы подтвердить бронь и предупредить об изменениях."
+          [done]="modalOpen()"
+        >
+          <app-booking-form
+            [ready]="time() !== null && tableId() !== null"
+            [submitting]="submitting()"
+            [apiError]="apiError()"
+            (submitted)="onSubmit($event)"
+          />
+        </app-booking-step>
+      </div>
+
+      <aside class="bk__aside">
+        <app-booking-summary
+          [date]="date()"
+          [time]="time()"
+          [guests]="guests()"
+          [table]="tableLabel()"
+        />
+      </aside>
+    </div>
+  </div>
+</section>
+
+<app-confirmation-modal
+  [open]="modalOpen()"
+  (openChange)="modalOpen.set($event)"
+  [confirmation]="confirmation()"
+  (closed)="onModalClosed()"
+/>

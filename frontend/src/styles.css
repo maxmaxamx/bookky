@@ -1,0 +1,210 @@
+@import 'tailwindcss';
+
+/* Источники, в которых Tailwind ищет имена классов. */
+@source './app';
+@source './index.html';
+
+/* ---------------------------------------------------------------------------
+   Дизайн-система: тёмная тема с золотыми акцентами
+   --------------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+
+  --color-ink-950: #08070b;
+  --color-ink-900: #0c0b11;
+  --color-ink-850: #11101a;
+  --color-ink-800: #171620;
+  --color-ink-700: #201e2a;
+  --color-ink-600: #2b2836;
+
+  --color-gold-100: #fbf3dd;
+  --color-gold-200: #f0e0b4;
+  --color-gold-300: #e4c98a;
+  --color-gold-400: #d5b163;
+  --color-gold-500: #c9a227;
+  --color-gold-600: #9d7c1a;
+
+  --color-cream: #f6f1e7;
+  --color-muted: #a09aac;
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.4s ease-out both;
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -140% 0;
+  }
+  to {
+    background-position: 240% 0;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--color-ink-950);
+    background-image:
+      radial-gradient(58% 46% at 50% -8%, rgb(201 162 39 / 0.16), transparent 70%),
+      radial-gradient(42% 38% at 100% 0%, rgb(201 162 39 / 0.08), transparent 75%);
+    background-repeat: no-repeat;
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  ::selection {
+    background-color: rgb(201 162 39 / 0.3);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-700);
+    border: 2px solid var(--color-ink-950);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-600);
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[0.68rem] font-medium tracking-[0.34em] text-gold-400 uppercase;
+  }
+
+  .gold-text {
+    @apply from-gold-100 via-gold-300 to-gold-500 bg-gradient-to-br bg-clip-text text-transparent;
+  }
+
+  .surface {
+    @apply border border-white/10 bg-ink-900/70 backdrop-blur-sm;
+  }
+
+  .hairline {
+    @apply via-gold-400/40 h-px w-full bg-gradient-to-r from-transparent to-transparent;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-transparent text-sm font-medium tracking-wide transition duration-300 disabled:cursor-not-allowed disabled:opacity-40;
+  }
+
+  .btn-gold {
+    @apply from-gold-300 to-gold-500 text-ink-950 bg-gradient-to-r shadow-[0_14px_34px_-16px_rgb(201_162_39_/_0.85)] hover:brightness-110 enabled:hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply border-gold-400/40 text-gold-200 hover:border-gold-300 hover:bg-gold-400/10;
+  }
+
+  .btn-ghost {
+    @apply text-muted px-4 py-2 hover:text-gold-200;
+  }
+
+  .btn-sm {
+    @apply px-5 py-2.5;
+  }
+
+  .btn-lg {
+    @apply px-7 py-3.5;
+  }
+
+  .field-label {
+    @apply text-muted mb-2 block text-[0.7rem] font-medium tracking-[0.18em] uppercase;
+  }
+
+  .field-input {
+    @apply text-cream focus:border-gold-400/70 focus:bg-ink-800 focus:ring-gold-400/20 w-full rounded-xl border border-white/10 bg-ink-850/80 px-4 py-3 text-base transition outline-none placeholder:text-white/25 focus:ring-2;
+  }
+
+  .field-invalid {
+    @apply border-red-400/60 focus:border-red-400 focus:ring-red-400/20;
+  }
+
+  .field-hint {
+    @apply text-muted mt-2 text-xs leading-relaxed;
+  }
+
+  .field-error {
+    @apply mt-2 text-xs leading-relaxed text-red-300;
+  }
+
+  .skeleton {
+    border-radius: 0.75rem;
+    background-image: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0.03) 0%,
+      rgb(255 255 255 / 0.09) 50%,
+      rgb(255 255 255 / 0.03) 100%
+    );
+    background-size: 240% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+}

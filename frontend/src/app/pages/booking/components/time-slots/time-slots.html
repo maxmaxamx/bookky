@@ -1,0 +1,99 @@
+<div class="ts">
+  @if (loading()) {
+    <!-- Состояние загрузки -->
+    <div class="ts-grid">
+      @for (placeholder of placeholders; track placeholder) {
+        <div class="skeleton h-16"></div>
+      }
+    </div>
+    <p class="ts-loading">Проверяем свободные столики…</p>
+  } @else if (loadError()) {
+    <p class="field-error" role="alert">Не удалось загрузить свободное время. Попробуйте сменить дату.</p>
+  } @else if (isClosed()) {
+    <!-- Выходной день -->
+    <div class="ts-empty">
+      <span class="ts-empty__icon" aria-hidden="true">
+        <svg
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
+          />
+        </svg>
+      </span>
+      <p class="ts-empty__title">В этот день ресторан закрыт</p>
+      <p class="ts-empty__text">
+        По понедельникам у нас выходной. Выберите, пожалуйста, другую дату.
+      </p>
+    </div>
+  } @else {
+    <!-- Слоты по периодам -->
+    <div class="ts-group">
+      <div>
+        <p class="ts-period">
+          {{ periodLabels.day }}
+        </p>
+        <div class="ts-grid mt-3">
+          @for (slot of daySlots(); track slot.id) {
+            <button
+              type="button"
+              [class]="slotClass(slot)"
+              [disabled]="!slot.available"
+              [attr.aria-pressed]="selected() === slot.time"
+              [attr.aria-label]="slot.time + ' — ' + slotHint(slot)"
+              (click)="toggle(slot)"
+            >
+              <span>{{ slot.time }}</span>
+              <span class="ts-slot__note">{{ slotHint(slot) }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div>
+        <p class="ts-period">
+          {{ periodLabels.evening }}
+        </p>
+        <div class="ts-grid mt-3">
+          @for (slot of eveningSlots(); track slot.id) {
+            <button
+              type="button"
+              [class]="slotClass(slot)"
+              [disabled]="!slot.available"
+              [attr.aria-pressed]="selected() === slot.time"
+              [attr.aria-label]="slot.time + ' — ' + slotHint(slot)"
+              (click)="toggle(slot)"
+            >
+              <span>{{ slot.time }}</span>
+              <span class="ts-slot__note">{{ slotHint(slot) }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (!hasAvailable()) {
+      <p class="field-error">
+        На эту дату свободных слотов не осталось — попробуйте соседний день.
+      </p>
+    }
+  }
+
+  <!-- Подсказки -->
+  <ul class="ts-notes">
+    <li>· Столик резервируется на 2 часа, продление — по согласованию с официантом.</li>
+    <li>· Бронирование доступно не позднее чем за час до визита.</li>
+    @if (banquetNote()) {
+      <li class="ts-notes__banquet">
+        · Для компании из {{ guests() }} гостей подойдёт банкетный зал — позвоните нам, и мы
+        подготовим отдельную зону.
+      </li>
+    }
+  </ul>
+</div>

@@ -1,0 +1,68 @@
+@reference '../../../../../styles.css';
+
+.ts {
+  @apply flex flex-col gap-5;
+}
+
+.ts-group {
+  @apply flex flex-col gap-5;
+}
+
+.ts-grid {
+  @apply grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5;
+}
+
+.ts-loading {
+  @apply text-muted text-xs;
+}
+
+.ts-period {
+  @apply text-muted text-[0.7rem] tracking-[0.2em] uppercase;
+}
+
+/* --- Слоты -------------------------------------------------------------- */
+.ts-slot {
+  @apply flex flex-col items-center gap-0.5 rounded-xl border px-2 py-2.5 text-sm transition;
+}
+
+.ts-slot--busy {
+  @apply cursor-not-allowed border-white/5 bg-white/2 text-white/25;
+}
+
+.ts-slot--on {
+  @apply border-transparent bg-gradient-to-br from-gold-300 to-gold-500 font-medium text-ink-950 shadow-[0_10px_24px_-14px_rgb(201_162_39_/_1)];
+}
+
+.ts-slot--free {
+  @apply border-white/10 text-cream/85 hover:border-gold-400/50 hover:bg-gold-400/10 hover:text-gold-100;
+}
+
+.ts-slot__note {
+  @apply text-[0.6rem] opacity-70;
+}
+
+/* --- Пустое состояние --------------------------------------------------- */
+.ts-empty {
+  @apply flex flex-col items-center gap-2 rounded-2xl border border-dashed border-white/12 px-6 py-10 text-center;
+}
+
+.ts-empty__icon {
+  @apply border-gold-400/30 text-gold-200 flex size-11 items-center justify-center rounded-full border;
+}
+
+.ts-empty__title {
+  @apply font-display text-cream text-lg;
+}
+
+.ts-empty__text {
+  @apply text-muted max-w-sm text-sm;
+}
+
+/* --- Подсказки ---------------------------------------------------------- */
+.ts-notes {
+  @apply text-muted flex flex-col gap-1.5 text-xs;
+}
+
+.ts-notes__banquet {
+  @apply text-gold-200;
+}

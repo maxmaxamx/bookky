@@ -1,0 +1,73 @@
+<div class="gc">
+  <div class="gc-row">
+    <div class="gc-stepper">
+      <button
+        class="gc-btn"
+        type="button"
+        [disabled]="!canDecrease()"
+        aria-label="Меньше гостей"
+        (click)="change(-1)"
+      >
+        <svg
+          class="size-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14" />
+        </svg>
+      </button>
+
+      <div class="gc-figure" aria-live="polite">
+        <p class="gold-text gc-figure__value">{{ value() }}</p>
+        <p class="gc-figure__label">{{ label() }}</p>
+      </div>
+
+      <button
+        class="gc-btn"
+        type="button"
+        [disabled]="!canIncrease()"
+        aria-label="Больше гостей"
+        (click)="change(1)"
+      >
+        <svg
+          class="size-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="gc-divider"></div>
+
+    <div class="gc-presets">
+      <span class="gc-presets__label">Быстрый выбор:</span>
+      @for (preset of presets; track preset) {
+        <button type="button" [class]="presetClass(preset)" (click)="setGuests(preset)">
+          {{ preset }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (value() >= banquetThreshold) {
+    <p class="gc-banquet">
+      Для компании из {{ value() }} гостей лучше подойдёт банкетный зал. Мы всё подготовим — просто
+      позвоните, и менеджер согласует меню и рассадку.
+    </p>
+  } @else {
+    <p class="field-hint">
+      Онлайн можно забронировать до {{ max }} гостей. Малышам до 6 лет место в счёте не нужно, но
+      детский стул стоит попросить заранее.
+    </p>
+  }
+</div>

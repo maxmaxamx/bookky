@@ -1,0 +1,68 @@
+@reference '../../../styles.css';
+
+.hdr {
+  @apply sticky top-0 z-40 w-full border-b border-transparent transition-colors duration-300;
+}
+
+.hdr--scrolled {
+  @apply border-white/10 bg-ink-950/85 backdrop-blur-xl;
+}
+
+.hdr__bar {
+  @apply mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-6 px-5 sm:px-8 lg:h-20;
+}
+
+.hdr__nav {
+  @apply hidden items-center gap-1 lg:flex;
+}
+
+.hdr__link {
+  @apply text-muted hover:text-cream relative rounded-full px-3 py-2 text-sm transition-colors duration-200 hover:bg-white/5;
+}
+
+/* Активная ссылка объявлена после базовой и с большей специфичностью, */
+/* поэтому выигрывает у :hover. */
+.hdr__link.hdr__link--active {
+  @apply text-gold-300 bg-gold-400/5;
+}
+
+.hdr__actions {
+  @apply flex items-center gap-2 sm:gap-3;
+}
+
+.hdr__phone {
+  @apply text-muted hover:text-gold-200 hidden text-sm transition-colors xl:inline-flex;
+}
+
+.hdr__account,
+.hdr__signout {
+  @apply text-muted hover:text-gold-200 cursor-pointer text-sm transition-colors;
+}
+
+.hdr__signout {
+  @apply border-l border-white/10 pl-3;
+}
+
+.hdr__burger {
+  @apply text-cream hover:text-gold-200 inline-flex size-10 items-center justify-center rounded-full border border-white/10 transition lg:hidden;
+}
+
+.hdr__menu {
+  @apply bg-ink-950/95 border-t border-white/10 backdrop-blur-xl lg:hidden;
+}
+
+.hdr__menuInner {
+  @apply mx-auto flex w-full max-w-7xl flex-col gap-1 px-5 py-5 sm:px-8;
+}
+
+.hdr__menuLink {
+  @apply text-muted hover:text-cream rounded-xl px-3 py-3 text-base transition-colors hover:bg-white/5;
+}
+
+.hdr__menuPhone {
+  @apply text-muted hover:text-gold-200 mt-2 px-3 py-2 text-sm;
+}
+
+.hdr__menuAuth {
+  @apply text-muted hover:text-gold-200 cursor-pointer px-3 py-3 text-left text-base;
+}

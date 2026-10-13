@@ -1,0 +1,57 @@
+@if (open()) {
+  <div class="cm">
+    <!-- Затемнение, клик по которому закрывает окно -->
+    <div class="cm__backdrop" (click)="close()" aria-hidden="true"></div>
+
+    <div class="cm__panel" role="dialog" aria-modal="true" aria-labelledby="confirmation-title">
+      <div class="cm__head">
+        <span class="cm__icon" aria-hidden="true">
+          <svg
+            class="size-7"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
+        </span>
+
+        <h2 id="confirmation-title" class="cm__title">Бронирование подтверждено</h2>
+
+        <p class="cm__lead">
+          {{ confirmation()?.name }}, ждём вас! Мы отправили детали на {{ confirmation()?.phone }}.
+        </p>
+      </div>
+
+      <dl class="cm__details">
+        @for (row of rows(); track row.label; let last = $last) {
+          <div [class.cm__row--wide]="last">
+            <dt class="cm__label">{{ row.label }}</dt>
+            <dd class="cm__value">{{ row.value }}</dd>
+          </div>
+        }
+      </dl>
+
+      <p class="cm__note">
+        За два часа до визита менеджер позвонит и уточнит детали. Если планы изменятся — сообщите
+        нам по телефону {{ site.phoneDisplay }}.
+      </p>
+
+      <div class="cm__actions">
+        <button
+          #doneButton
+          class="btn btn-gold btn-lg flex-1"
+          type="button"
+          (click)="close()"
+          [attr.aria-label]="'Закрыть окно подтверждения брони ' + (confirmation()?.id ?? '')"
+        >
+          Готово
+        </button>
+        <a class="btn btn-outline btn-lg flex-1" [href]="site.phoneHref">Позвонить</a>
+      </div>
+    </div>
+  </div>
+}

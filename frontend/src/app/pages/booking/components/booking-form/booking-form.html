@@ -1,0 +1,115 @@
+<form class="bf" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  @if (apiError()) {
+    <p class="field-error" role="alert">{{ apiError() }}</p>
+  }
+
+  <div class="bf-fields">
+    <div>
+      <label class="field-label" for="booking-name">Имя гостя</label>
+      <input
+        id="booking-name"
+        class="field-input"
+        [class.field-invalid]="errors().name"
+        type="text"
+        formControlName="name"
+        autocomplete="name"
+        placeholder="Как к вам обращаться"
+      />
+      @if (errors().name) {
+        <p class="field-error">{{ errors().name }}</p>
+      } @else {
+        <p class="field-hint">Например: Анна или Анна-Мария.</p>
+      }
+    </div>
+
+    <div>
+      <label class="field-label" for="booking-phone">Телефон</label>
+      <input
+        id="booking-phone"
+        class="field-input"
+        [class.field-invalid]="errors().phone"
+        type="tel"
+        formControlName="phone"
+        inputmode="tel"
+        autocomplete="tel"
+        placeholder="+7 (999) 123-45-67"
+      />
+      @if (errors().phone) {
+        <p class="field-error">{{ errors().phone }}</p>
+      } @else {
+        <p class="field-hint">Позвоним только для подтверждения брони.</p>
+      }
+    </div>
+  </div>
+
+  <div>
+    <label class="field-label" for="booking-comment">
+      Комментарий <span class="bf-optional">· необязательно</span>
+    </label>
+    <textarea
+      id="booking-comment"
+      class="field-input min-h-24 resize-y"
+      [class.field-invalid]="errors().comment"
+      formControlName="comment"
+      rows="3"
+      [attr.maxlength]="maxCommentLength"
+      placeholder="Например: столик у окна, детский стул или торт-сюрприз"
+    ></textarea>
+    <div class="bf-counter">
+      @if (errors().comment) {
+        <p class="field-error">{{ errors().comment }}</p>
+      } @else {
+        <span class="field-hint">Опишите пожелания — учтём при подготовке стола.</span>
+      }
+      <span class="bf-counter__value">{{ commentLength() }}/{{ maxCommentLength }}</span>
+    </div>
+  </div>
+
+  <div>
+    <label class="bf-consent">
+      <input
+        class="bf-consent__input"
+        [class.field-invalid]="errors().consent"
+        type="checkbox"
+        formControlName="consent"
+      />
+      <span> Согласен с обработкой персональных данных и на звонок для подтверждения брони. </span>
+    </label>
+    @if (errors().consent) {
+      <p class="field-error">{{ errors().consent }}</p>
+    }
+  </div>
+
+  <div class="bf-actions">
+    <button
+      class="btn btn-gold btn-lg w-full sm:w-auto"
+      type="submit"
+      [disabled]="!ready() || submitting()"
+    >
+      @if (submitting()) {
+        <svg
+          class="bf-spinner"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M12 3a9 9 0 1 0 9 9" />
+        </svg>
+        Бронируем…
+      } @else {
+        Подтвердить бронирование
+      }
+    </button>
+
+    <p class="bf-actions__hint">
+      @if (!ready()) {
+        Сначала выберите дату, время и столик в шагах 01–04.
+      } @else {
+        Подтверждение приходит сразу после отправки.
+      }
+    </p>
+  </div>
+</form>

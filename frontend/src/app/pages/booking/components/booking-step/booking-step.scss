@@ -1,0 +1,38 @@
+@reference '../../../../../styles.css';
+
+.bs {
+  @apply rounded-2xl p-5 sm:p-7;
+}
+
+/* Двойной класс перекрывает border-color базового .surface. */
+.bs.bs--done {
+  @apply border-gold-400/25;
+}
+
+.bs__head {
+  @apply flex items-start gap-4;
+}
+
+.bs__badge {
+  @apply font-display mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border text-sm transition;
+}
+
+.bs__badge--done {
+  @apply border-gold-400/50 bg-gold-400/10 text-gold-200;
+}
+
+.bs__badge--idle {
+  @apply border-white/15 text-muted;
+}
+
+.bs__title {
+  @apply font-display text-cream text-xl font-medium sm:text-2xl;
+}
+
+.bs__hint {
+  @apply text-muted mt-1 text-sm leading-relaxed;
+}
+
+.bs__body {
+  @apply mt-6;
+}

@@ -1,0 +1,61 @@
+@reference '../../../../../styles.css';
+
+.bsum {
+  @apply flex flex-col gap-6 rounded-2xl p-6;
+}
+
+.bsum__head {
+  @apply flex items-start justify-between gap-4;
+}
+
+.bsum__date {
+  @apply font-display text-cream mt-3 text-xl leading-snug font-light;
+}
+
+.bsum__time {
+  @apply font-display rounded-xl border px-3 py-2 text-lg;
+}
+
+.bsum__time--on {
+  @apply border-gold-400/50 bg-gold-400/10 text-gold-200;
+}
+
+.bsum__time--idle {
+  @apply border-white/10 text-white/30;
+}
+
+.bsum__rows {
+  @apply flex flex-col gap-3 text-sm;
+}
+
+.bsum__row {
+  @apply flex items-baseline justify-between gap-4;
+}
+
+.bsum__label {
+  @apply text-muted;
+}
+
+.bsum__value {
+  @apply text-right text-white/30;
+}
+
+.bsum__value--filled {
+  @apply text-cream;
+}
+
+.bsum__track {
+  @apply h-1 w-full overflow-hidden rounded-full bg-white/8;
+}
+
+.bsum__bar {
+  @apply from-gold-300 to-gold-500 block h-full rounded-full bg-gradient-to-r transition-[width] duration-500;
+}
+
+.bsum__notes {
+  @apply text-muted flex flex-col gap-2 text-xs leading-relaxed;
+}
+
+.bsum__phone {
+  @apply text-gold-200 hover:text-gold-100 text-sm transition-colors;
+}

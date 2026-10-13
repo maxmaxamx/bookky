@@ -1,0 +1,56 @@
+<section class="account-page">
+  <div class="account__shell">
+    <header class="account__head">
+      <div>
+        <p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p>
+        <h1 class="account__title">Мои бронирования</h1>
+        <p class="account__lead">{{ auth.user()?.email }}</p>
+      </div>
+      <a class="btn btn-outline btn-sm" routerLink="/booking">Новая бронь</a>
+    </header>
+
+    @if (error()) {
+      <p class="account__error" role="alert">{{ error() }}</p>
+    }
+
+    @if (loading()) {
+      <p class="account__state" role="status">Загружаем бронирования…</p>
+    } @else if (bookings().length === 0) {
+      <div class="account__empty">
+        <p>У вас пока нет бронирований.</p>
+        <a routerLink="/booking">Выбрать столик</a>
+      </div>
+    } @else {
+      <div class="account__list">
+        @for (booking of bookings(); track booking.id) {
+          <article class="account__booking">
+            <div class="account__when">
+              <p class="account__date">{{ dateLabel(booking.date) }}</p>
+              <p class="account__time">{{ booking.time }}</p>
+            </div>
+            <div class="account__details">
+              <strong>{{ booking.table }}</strong>
+              <span>{{ guestsLabel(booking.guests) }} · {{ booking.id }}</span>
+              <span
+                class="account__status"
+                [class.account__status--pending]="booking.status === 'Pending'"
+                [class.account__status--confirmed]="booking.status === 'Confirmed'"
+                [class.account__status--cancelled]="booking.status === 'Cancelled'"
+              >{{ statusLabel(booking.status) }}</span>
+            </div>
+            @if (booking.status !== 'Cancelled') {
+              <button
+                class="btn btn-ghost account__cancel"
+                type="button"
+                [disabled]="cancellingIds().has(booking.id)"
+                (click)="cancel(booking)"
+              >
+                {{ cancellingIds().has(booking.id) ? 'Отменяем…' : 'Отменить' }}
+              </button>
+            }
+          </article>
+        }
+      </div>
+    }
+  </div>
+</section>

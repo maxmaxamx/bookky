@@ -1,0 +1,145 @@
+<!-- Hero -->
+<section class="hero">
+  <div class="hero__grid">
+    <div class="animate-fade-up">
+      <p class="eyebrow">Авторская кухня · {{ site.address }}</p>
+
+      <h1 class="hero__title">
+        Вечер, который хочется
+        <span class="gold-text">повторить</span>
+      </h1>
+
+      <p class="hero__lead">
+        Открытый огонь, сезонные продукты и винная карта из сорока регионов. Оставьте вечер за нами
+        — забронируйте столик за пару минут.
+      </p>
+
+      <div class="hero__actions">
+        <a class="btn btn-gold btn-lg" routerLink="/booking">Забронировать столик</a>
+        <a class="btn btn-outline btn-lg" routerLink="/" fragment="menu">Смотреть меню</a>
+      </div>
+
+      <dl class="hero__stats">
+        @for (stat of stats; track stat.label) {
+          <div>
+            <dt class="gold-text hero__stat-value">{{ stat.value }}</dt>
+            <dd class="hero__stat-label">{{ stat.label }}</dd>
+          </div>
+        }
+      </dl>
+    </div>
+
+    <!-- Декоративный блок вместо фото -->
+    <div class="hero__visual">
+      <div class="surface hero__card">
+        <div class="hero__note">
+          <p class="eyebrow">Ужин при свечах</p>
+          <p class="hero__note-title">Сет из семи подач от шефа</p>
+          <p class="hero__note-text">Каждую пятницу и субботу · 19:00</p>
+        </div>
+        <div class="hero__ring"></div>
+        <div class="hero__ring hero__ring--wide"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- О ресторане -->
+<section id="about" class="home-section">
+  <div class="about__grid">
+    <app-section-heading
+      align="left"
+      eyebrow="О ресторане"
+      title="Ресторан, где кухня звучит как музыка"
+      description="BOOKKY — это открытая кухня, живой огонь и команда, которая знает каждый продукт по имени. Мы работаем с небольшими фермами и меняем меню вслед за сезоном."
+    />
+
+    <div class="about__cards">
+      @for (
+        item of [
+          { title: 'Открытый огонь', text: 'Мангал на берёзовых углях и дровяная печь.' },
+          { title: 'Сезонное меню', text: 'Обновляем карту четыре раза в год.' },
+          { title: 'Винный погреб', text: 'Более 40 регионов и вертикальные дегустации.' },
+          { title: 'Приватный зал', text: 'Кабинка «Погреб» для компаний до 8 гостей.' },
+        ];
+        track item.title
+      ) {
+        <article class="surface feature">
+          <h3 class="feature__title">{{ item.title }}</h3>
+          <p class="feature__text">{{ item.text }}</p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Меню -->
+<section id="menu" class="home-section">
+  <div class="shell">
+    <app-section-heading
+      eyebrow="Меню"
+      title="Блюда, которые стоит попробовать"
+      description="Небольшая подборка из основного меню — полная карта ждёт вас в зале."
+    />
+
+    <div class="menu__grid">
+      @for (dish of dishes; track dish.name) {
+        <article class="surface dish group">
+          <div class="dish__head">
+            <h3 class="dish__name">{{ dish.name }}</h3>
+            <span class="dish__price">{{ dish.price }}</span>
+          </div>
+
+          <p class="dish__text">{{ dish.description }}</p>
+
+          @if (dish.tag) {
+            <span class="dish__tag">{{ dish.tag }}</span>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Контакты -->
+<section id="contacts" class="home-section">
+  <div class="shell">
+    <app-section-heading
+      eyebrow="Контакты"
+      title="Найдите нас в центре Москвы"
+      description="Мы в пяти минутах от метро «Кропоткинская». Парковка для гостей — по предварительной брони."
+    />
+
+    <div class="contacts__grid">
+      <div class="surface contact-card">
+        <p class="eyebrow">Адрес</p>
+        <p class="contact-card__value">{{ site.address }}</p>
+        <p class="contact-card__note">Вход со стороны бульвара, второй этаж.</p>
+      </div>
+
+      <div class="surface contact-card">
+        <p class="eyebrow">Бронирование</p>
+        <a class="contact-card__link" [href]="site.phoneHref">
+          {{ site.phoneDisplay }}
+        </a>
+        <p class="contact-card__note">Ежедневно с 11:00 до 23:00</p>
+      </div>
+
+      <div class="surface contact-card">
+        <p class="eyebrow">Часы работы</p>
+        <p class="contact-card__value">{{ site.hours }}</p>
+        <p class="contact-card__note">{{ site.closedNote }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Призыв к бронированию -->
+<section class="cta-wrap">
+  <div class="cta">
+    <p class="eyebrow">Свободные столики на этой неделе</p>
+    <h2 class="cta__title">Забронируйте вечер, о котором будете рассказывать</h2>
+    <a class="btn btn-gold btn-lg mt-2" routerLink="/booking">Выбрать дату и время</a>
+    <p class="cta__note">Подтверждение приходит сразу, звонок — за 2 часа до визита</p>
+  </div>
+</section>

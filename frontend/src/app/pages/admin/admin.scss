@@ -1,0 +1,146 @@
+@reference '../../../styles.css';
+
+.admin-page {
+  @apply px-5 pt-14 pb-20 sm:px-8 lg:pt-20 lg:pb-24;
+}
+
+.admin__shell {
+  @apply mx-auto w-full max-w-7xl;
+}
+
+.admin__head {
+  @apply flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.admin__title {
+  @apply font-display text-cream mt-4 text-4xl leading-tight font-light sm:text-5xl;
+}
+
+.admin__lead {
+  @apply text-muted mt-3 text-sm;
+}
+
+.admin__notice {
+  @apply max-w-sm border-l-2 border-red-400/70 bg-red-400/5 px-4 py-3 text-xs leading-relaxed text-red-200/80;
+}
+
+.admin__metrics {
+  @apply mt-9 grid grid-cols-3 gap-3;
+}
+
+.admin__metric {
+  @apply flex min-h-20 items-center justify-between gap-3 border border-white/10 bg-ink-900/70 px-4 py-3 sm:px-6;
+}
+
+.admin__metric span {
+  @apply text-muted text-xs sm:text-sm;
+}
+
+.admin__metric strong {
+  @apply font-display text-gold-200 text-2xl font-light sm:text-3xl;
+}
+
+.admin__controls {
+  @apply mt-8 flex flex-wrap items-end gap-4 border-b border-white/10 pb-5;
+}
+
+.admin__control {
+  @apply w-full sm:w-52;
+}
+
+.admin__input {
+  @apply rounded-lg py-2.5 text-sm;
+}
+
+.admin__refresh,
+.admin__clear {
+  @apply min-h-11;
+}
+
+.admin__table-wrap {
+  @apply mt-5 overflow-x-auto border border-white/10 bg-ink-900/60;
+}
+
+.admin__table {
+  @apply w-full min-w-[850px] border-collapse text-left text-sm;
+}
+
+.admin__table th {
+  @apply text-muted border-b border-white/10 px-4 py-3 text-[0.65rem] font-medium tracking-[0.14em] uppercase;
+}
+
+.admin__table td {
+  @apply border-b border-white/5 px-4 py-4 align-top text-cream/90;
+}
+
+.admin__table tbody tr:last-child td {
+  @apply border-b-0;
+}
+
+.admin__table tbody tr:hover {
+  @apply bg-white/[0.025];
+}
+
+.admin__table td strong,
+.admin__secondary,
+.admin__comment {
+  @apply block;
+}
+
+.admin__secondary {
+  @apply text-muted mt-1 text-xs;
+}
+
+.admin__phone:hover {
+  @apply text-gold-200;
+}
+
+.admin__comment {
+  @apply text-muted mt-2 max-w-56 text-xs leading-relaxed;
+}
+
+.admin__id {
+  @apply text-gold-200 font-mono text-xs;
+}
+
+.admin__status {
+  @apply min-w-32 cursor-pointer rounded-md border bg-ink-850 px-3 py-2 text-xs outline-none transition disabled:cursor-wait disabled:opacity-50;
+}
+
+.admin__status--pending {
+  @apply border-gold-400/30 text-gold-200;
+}
+
+.admin__status--confirmed {
+  @apply border-emerald-400/30 text-emerald-200;
+}
+
+.admin__status--cancelled {
+  @apply border-red-400/30 text-red-200;
+}
+
+.admin__state {
+  @apply mt-5 border border-white/10 bg-ink-900/50 px-5 py-10 text-center text-sm text-muted;
+}
+
+.admin__error {
+  @apply mt-5 border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm text-red-200;
+}
+
+.admin__result-count {
+  @apply text-muted mt-3 text-xs;
+}
+
+@media (max-width: 520px) {
+  .admin__metric {
+    @apply min-h-16 flex-col items-start justify-center gap-0.5 px-3;
+  }
+
+  .admin__metric span {
+    @apply text-[0.65rem];
+  }
+
+  .admin__metric strong {
+    @apply text-2xl;
+  }
+}

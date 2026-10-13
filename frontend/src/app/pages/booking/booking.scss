@@ -1,0 +1,49 @@
+@reference '../../../styles.css';
+
+.bk {
+  @apply px-5 pt-14 pb-20 sm:px-8 lg:pt-20 lg:pb-24;
+}
+
+.bk__shell {
+  @apply mx-auto w-full max-w-7xl;
+}
+
+.bk__head {
+  @apply flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between;
+}
+
+.bk__intro {
+  @apply max-w-2xl;
+}
+
+.bk__title {
+  @apply font-display text-cream mt-5 text-4xl leading-tight font-light sm:text-5xl;
+}
+
+.bk__lead {
+  @apply text-muted mt-5 text-sm leading-relaxed sm:text-base;
+}
+
+.bk__facts {
+  @apply text-muted grid gap-3 text-sm sm:grid-cols-2 lg:max-w-sm lg:text-right;
+}
+
+.bk__fact {
+  @apply flex items-center gap-2 lg:justify-end;
+}
+
+.bk__fact-dot {
+  @apply bg-gold-400/70 size-1.5 shrink-0 rounded-full;
+}
+
+.bk__grid {
+  @apply mt-12 grid gap-8 xl:grid-cols-[minmax(0,1fr)_23rem];
+}
+
+.bk__steps {
+  @apply flex flex-col gap-5;
+}
+
+.bk__aside {
+  @apply xl:sticky xl:top-28 xl:self-start;
+}

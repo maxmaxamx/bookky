@@ -1,0 +1,37 @@
+@reference '../../../styles.css';
+
+.auth-page {
+  @apply px-5 pt-16 pb-24 sm:px-8 lg:pt-24;
+}
+
+.auth__shell {
+  @apply mx-auto w-full max-w-md animate-fade-up border border-white/10 bg-ink-900/75 px-6 py-8 sm:px-9 sm:py-10;
+}
+
+.auth__title {
+  @apply font-display text-cream mt-5 text-4xl leading-tight font-light;
+}
+
+.auth__lead {
+  @apply text-muted mt-3 text-sm leading-relaxed;
+}
+
+.auth__form {
+  @apply mt-8 flex flex-col gap-5;
+}
+
+.auth__submit {
+  @apply mt-1 w-full rounded-lg;
+}
+
+.auth__error {
+  @apply border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm text-red-200;
+}
+
+.auth__switch {
+  @apply text-muted mt-6 text-center text-sm;
+}
+
+.auth__switch a {
+  @apply text-gold-300 hover:text-gold-100 ml-1 underline underline-offset-4;
+}

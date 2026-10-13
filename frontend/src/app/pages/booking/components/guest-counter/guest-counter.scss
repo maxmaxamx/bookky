@@ -1,0 +1,59 @@
+@reference '../../../../../styles.css';
+
+.gc {
+  @apply flex flex-col gap-4;
+}
+
+.gc-row {
+  @apply flex flex-wrap items-center gap-x-6 gap-y-4;
+}
+
+.gc-stepper {
+  @apply flex items-center gap-3;
+}
+
+.gc-btn {
+  @apply text-cream flex size-11 items-center justify-center rounded-full border border-white/12 text-lg transition hover:border-gold-400/50 hover:text-gold-200 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/12 disabled:hover:text-cream;
+}
+
+.gc-figure {
+  @apply w-24 shrink-0 text-center;
+}
+
+.gc-figure__value {
+  @apply font-display text-cream text-4xl leading-none font-semibold tabular-nums;
+  inline-size: 3ch;
+  margin-inline: auto;
+}
+
+.gc-figure__label {
+  @apply text-muted mt-1.5 text-xs;
+}
+
+.gc-divider {
+  @apply hidden h-12 w-px bg-white/10 sm:block;
+}
+
+.gc-presets {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.gc-presets__label {
+  @apply text-muted text-xs;
+}
+
+.gc-preset {
+  @apply rounded-full border px-3.5 py-2 text-xs transition;
+}
+
+.gc-preset--on {
+  @apply border-gold-400/60 bg-gold-400/10 text-gold-200;
+}
+
+.gc-preset--idle {
+  @apply border-white/12 text-muted hover:border-gold-400/40 hover:text-gold-200;
+}
+
+.gc-banquet {
+  @apply text-gold-200 text-xs leading-relaxed;
+}

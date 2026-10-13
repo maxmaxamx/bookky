@@ -1,0 +1,45 @@
+<div class="surface bsum">
+  <div class="bsum__head">
+    <div>
+      <p class="eyebrow">Предварительный заказ</p>
+      <p class="bsum__date">{{ dateLabel() }}</p>
+    </div>
+    <span [class]="'bsum__time ' + (isReady() ? 'bsum__time--on' : 'bsum__time--idle')">
+      {{ time() ?? '—:—' }}
+    </span>
+  </div>
+
+  <div class="hairline"></div>
+
+  <dl class="bsum__rows">
+    @for (row of rows(); track row.label) {
+      <div class="bsum__row">
+        <dt class="bsum__label">{{ row.label }}</dt>
+        <dd [class]="'bsum__value ' + (row.filled ? 'bsum__value--filled' : '')">
+          {{ row.value }}
+        </dd>
+      </div>
+    }
+  </dl>
+
+  <div>
+    <div class="bsum__track">
+      <span class="bsum__bar" [style.width]="progress()"></span>
+    </div>
+    <p class="field-hint">
+      @if (isReady()) {
+        Всё готово — заполните контакты в шаге 04.
+      } @else {
+        Выберите время в шаге 02, чтобы продолжить.
+      }
+    </p>
+  </div>
+
+  <ul class="bsum__notes">
+    <li>· Столик удерживаем 15 минут после указанного времени.</li>
+    <li>· Отменить бронь можно звонком не позднее чем за 2 часа.</li>
+    <li>· Дресс-код: smart casual.</li>
+  </ul>
+
+  <a class="bsum__phone" [href]="site.phoneHref"> Или позвоните: {{ site.phoneDisplay }} </a>
+</div>

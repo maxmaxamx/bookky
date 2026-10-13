@@ -1,0 +1,21 @@
+@reference '../../../../styles.css';
+
+.sh {
+  @apply flex flex-col gap-4;
+}
+
+.sh--center {
+  @apply items-center text-center;
+}
+
+.sh--left {
+  @apply items-start text-left;
+}
+
+.sh__title {
+  @apply font-display text-cream text-3xl leading-tight font-light sm:text-4xl md:text-[2.75rem];
+}
+
+.sh__desc {
+  @apply text-muted max-w-2xl text-sm leading-relaxed sm:text-base;
+}

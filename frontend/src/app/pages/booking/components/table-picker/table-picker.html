@@ -1,0 +1,72 @@
+<div class="tp">
+  <div class="tp__head">
+    <p class="tp__availability" aria-live="polite">
+      @if (!time()) {
+        Сначала выберите время, чтобы увидеть доступность столиков.
+      } @else if (loading()) {
+        Загружаем доступность столиков…
+      } @else if (error()) {
+        {{ error() }}
+      } @else if (availableCount() === 0) {
+        На это время нет подходящих столиков. Выберите другой слот или уменьшите число гостей.
+      } @else if (selectedTable()) {
+        {{ selectedTable()?.id }} · {{ selectedTable()?.zone }} ·
+        {{ seatsLabel(selectedTable()!.seats) }}
+      } @else {
+        Свободно подходящих столиков: {{ availableCount() }}
+      }
+    </p>
+    <span class="tp__capacity">{{ guestsText() }}</span>
+  </div>
+
+  <div class="tp__map" role="group" aria-label="План зала ресторана">
+    <div class="tp__room">
+      <div class="tp__zone tp__zone--windows" aria-hidden="true">ПАНОРАМНЫЕ ОКНА</div>
+      <div class="tp__zone tp__zone--bar" aria-hidden="true">БАР</div>
+      <div class="tp__zone tp__zone--kitchen" aria-hidden="true">КУХНЯ</div>
+      <div class="tp__zone tp__zone--entrance" aria-hidden="true">ВХОД</div>
+
+      @for (table of tables(); track table.id) {
+        <button
+          class="tp__table"
+          [class.tp__table--selected]="selected() === table.id"
+          [class.tp__table--busy]="!table.available"
+          [class.tp__table--small]="table.seats < guests()"
+          [style.grid-area]="table.position"
+          [disabled]="!table.available || table.seats < guests()"
+          [attr.aria-pressed]="selected() === table.id"
+          [attr.aria-label]="
+            'Стол ' +
+            table.id +
+            ', на ' +
+            seatsLabel(table.seats) +
+            ', ' +
+            tableStatus(table.id, table.available, table.seats)
+          "
+          type="button"
+          (click)="choose(table.id)"
+        >
+          <span class="tp__furniture" aria-hidden="true">
+            <span class="tp__tabletop">{{ table.id.slice(1) }}</span>
+            @for (position of chairPositions(table.seats); track $index) {
+              <span [class]="'tp__chair tp__chair--' + position"></span>
+            }
+          </span>
+          <span class="tp__seats">{{ seatsLabel(table.seats) }}</span>
+          <span class="tp__status">{{ tableStatus(table.id, table.available, table.seats) }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <ul class="tp__legend" aria-label="Обозначения плана">
+    <li><span class="tp__legend-dot tp__legend-dot--free"></span>Свободен</li>
+    <li><span class="tp__legend-dot tp__legend-dot--selected"></span>Выбран</li>
+    <li><span class="tp__legend-dot tp__legend-dot--busy"></span>Занят</li>
+    <li><span class="tp__legend-dot tp__legend-dot--small"></span>Мало мест</li>
+  </ul>
+
+  @if (time() && availableCount() > 0 && !selectedTable()) {
+    <p class="tp__hint">Выберите подходящий столик на плане зала.</p>
+  }
+</div>

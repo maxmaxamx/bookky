@@ -1,0 +1,95 @@
+<header class="hdr" [class.hdr--scrolled]="scrolled()">
+  <div class="hdr__bar">
+    <app-logo />
+
+    <!-- Навигация для десктопа -->
+    <nav class="hdr__nav" aria-label="Основная навигация">
+      @for (item of navItems; track item.label) {
+        <a
+          class="hdr__link"
+          [routerLink]="item.link"
+          [fragment]="item.fragment"
+          [routerLinkActiveOptions]="{ exact: true }"
+          routerLinkActive="hdr__link--active"
+          >{{ item.label }}</a
+        >
+      }
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="hdr__phone" [href]="site.phoneHref">{{ site.phoneDisplay }}</a>
+
+      @if (auth.user()?.role !== 'admin') {
+        <a class="btn btn-gold btn-sm hidden sm:inline-flex" routerLink="/booking"> Забронировать </a>
+      }
+
+      @if (auth.user(); as user) {
+        <a class="hdr__account hidden lg:inline-flex" [routerLink]="user.role === 'admin' ? '/admin' : '/account'">
+          {{ user.role === 'admin' ? 'Панель' : 'Кабинет' }}
+        </a>
+        <button class="hdr__signout hidden lg:inline-flex" type="button" (click)="signOut()">Выйти</button>
+      } @else {
+        <a class="hdr__account hidden lg:inline-flex" routerLink="/login">Войти</a>
+      }
+
+      <!-- Кнопка мобильного меню -->
+      <button
+        class="hdr__burger"
+        type="button"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="mobile-navigation"
+        [attr.aria-label]="menuOpen() ? 'Закрыть меню' : 'Открыть меню'"
+        (click)="toggleMenu()"
+      >
+        <svg
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          @if (menuOpen()) {
+            <path d="M6 6l12 12M18 6L6 18" />
+          } @else {
+            <path d="M3 7h18M3 12h18M3 17h18" />
+          }
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Мобильное меню -->
+  @if (menuOpen()) {
+    <nav id="mobile-navigation" class="hdr__menu" aria-label="Мобильная навигация">
+      <div class="hdr__menuInner">
+        @for (item of navItems; track item.label) {
+          <a
+            class="hdr__menuLink"
+            [routerLink]="item.link"
+            [fragment]="item.fragment"
+            (click)="closeMenu()"
+            >{{ item.label }}</a
+          >
+        }
+
+        <a class="btn btn-gold btn-lg mt-3 w-full" routerLink="/booking" (click)="closeMenu()">
+          Забронировать столик
+        </a>
+        <a class="hdr__menuPhone" [href]="site.phoneHref">
+          {{ site.phoneDisplay }}
+        </a>
+        @if (auth.user(); as user) {
+          <a class="hdr__menuLink" [routerLink]="user.role === 'admin' ? '/admin' : '/account'" (click)="closeMenu()">
+            {{ user.role === 'admin' ? 'Панель управления' : 'Мои бронирования' }}
+          </a>
+          <button class="hdr__menuAuth" type="button" (click)="signOut()">Выйти</button>
+        } @else {
+          <a class="hdr__menuLink" routerLink="/login" (click)="closeMenu()">Войти</a>
+          <a class="hdr__menuLink" routerLink="/register" (click)="closeMenu()">Создать аккаунт</a>
+        }
+      </div>
+    </nav>
+  }
+</header>

@@ -1,0 +1,11 @@
+<div class="sh" [class.sh--center]="align() === 'center'" [class.sh--left]="align() === 'left'">
+  <p class="eyebrow">{{ eyebrow() }}</p>
+
+  <h2 class="sh__title">{{ title() }}</h2>
+
+  <span class="hairline max-w-28"></span>
+
+  @if (description()) {
+    <p class="sh__desc">{{ description() }}</p>
+  }
+</div>

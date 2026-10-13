@@ -1,0 +1,61 @@
+@reference '../../../styles.css';
+
+.ft {
+  @apply relative mt-24 border-t border-white/10 bg-ink-950/80;
+}
+
+.ft__inner {
+  @apply mx-auto w-full max-w-7xl px-5 py-14 sm:px-8 lg:py-16;
+}
+
+.ft__grid {
+  @apply grid gap-10 md:grid-cols-2 lg:grid-cols-4;
+}
+
+.ft__brand {
+  @apply lg:col-span-2;
+}
+
+.ft__about {
+  @apply text-muted mt-5 max-w-sm text-sm leading-relaxed;
+}
+
+.ft__socials {
+  @apply mt-6 flex flex-wrap gap-3;
+}
+
+.ft__social {
+  @apply text-muted hover:border-gold-400/50 hover:text-gold-200 rounded-full border border-white/10 px-4 py-2 text-xs tracking-wide transition;
+}
+
+.ft__list {
+  @apply mt-5 space-y-3;
+}
+
+.ft__list--about {
+  @apply text-muted text-sm;
+}
+
+.ft__link {
+  @apply text-muted hover:text-gold-200 text-sm transition-colors;
+}
+
+.ft__contactLink {
+  @apply hover:text-gold-200 transition-colors;
+}
+
+.ft__hours {
+  @apply text-cream;
+}
+
+.ft__note {
+  @apply text-xs;
+}
+
+.ft__bottom {
+  @apply text-muted flex flex-col items-center justify-between gap-4 text-xs sm:flex-row;
+}
+
+.ft__bottomLink {
+  @apply hover:text-gold-200 transition-colors;
+}

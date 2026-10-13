@@ -1,0 +1,165 @@
+@reference '../../../styles.css';
+
+.shell {
+  @apply mx-auto w-full max-w-7xl;
+}
+
+.home-section {
+  @apply px-5 py-20 sm:px-8 lg:py-24;
+}
+
+/* --- Hero --------------------------------------------------------------- */
+.hero {
+  @apply relative overflow-hidden px-5 pt-16 pb-20 sm:px-8 lg:pt-24 lg:pb-28;
+}
+
+.hero__grid {
+  @apply mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_0.95fr];
+}
+
+.hero__title {
+  @apply font-display text-cream mt-6 text-[2.75rem] leading-[1.05] font-light sm:text-6xl lg:text-7xl;
+}
+
+.hero__lead {
+  @apply text-muted mt-7 max-w-xl text-base leading-relaxed sm:text-lg;
+}
+
+.hero__actions {
+  @apply mt-9 flex flex-wrap items-center gap-3;
+}
+
+.hero__stats {
+  @apply mt-12 grid max-w-lg grid-cols-3 gap-6;
+}
+
+.hero__stat-value {
+  @apply font-display text-3xl font-semibold;
+}
+
+.hero__stat-label {
+  @apply text-muted mt-1 text-xs leading-snug;
+}
+
+.hero__visual {
+  @apply animate-fade-up relative;
+  animation-delay: 120ms;
+}
+
+.hero__card {
+  @apply relative aspect-4/5 overflow-hidden rounded-[2rem];
+  background-image:
+    radial-gradient(120% 100% at 20% 0%, rgb(201 162 39 / 0.28), transparent 60%),
+    linear-gradient(160deg, #11101a 0%, #08070b 100%);
+}
+
+.hero__note {
+  @apply absolute inset-x-8 bottom-8 rounded-2xl border border-white/10 bg-ink-950/70 p-5 backdrop-blur-sm;
+}
+
+.hero__note-title {
+  @apply font-display text-cream mt-3 text-2xl font-light;
+}
+
+.hero__note-text {
+  @apply text-muted mt-2 text-xs;
+}
+
+.hero__ring {
+  @apply border-gold-400/25 absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 rounded-full border;
+}
+
+.hero__ring--wide {
+  @apply size-64 border-gold-400/15;
+}
+
+/* --- О ресторане -------------------------------------------------------- */
+.about__grid {
+  @apply mx-auto grid w-full max-w-7xl gap-14 lg:grid-cols-2 lg:items-center;
+}
+
+.about__cards {
+  @apply grid gap-4 sm:grid-cols-2;
+}
+
+.feature {
+  @apply h-full rounded-2xl p-6 transition hover:border-gold-400/30;
+}
+
+.feature__title {
+  @apply font-display text-cream text-xl font-medium;
+}
+
+.feature__text {
+  @apply text-muted mt-2 text-sm leading-relaxed;
+}
+
+/* --- Меню --------------------------------------------------------------- */
+.menu__grid {
+  @apply mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.dish {
+  @apply flex flex-col rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:border-gold-400/35;
+}
+
+.dish__head {
+  @apply flex items-start justify-between gap-4;
+}
+
+.dish__name {
+  @apply font-display text-cream text-xl font-medium;
+}
+
+.dish__price {
+  @apply text-gold-300 shrink-0 text-sm font-medium;
+}
+
+.dish__text {
+  @apply text-muted mt-3 flex-1 text-sm leading-relaxed;
+}
+
+.dish__tag {
+  @apply border-gold-400/30 text-gold-200 mt-5 w-fit rounded-full border px-3 py-1 text-[0.65rem] tracking-[0.18em] uppercase;
+}
+
+/* --- Контакты ----------------------------------------------------------- */
+.contacts__grid {
+  @apply mt-14 grid gap-5 lg:grid-cols-3;
+}
+
+.contact-card {
+  @apply rounded-2xl p-6;
+}
+
+.contact-card__value {
+  @apply text-cream mt-4 text-lg;
+}
+
+.contact-card__link {
+  @apply text-cream hover:text-gold-200 mt-4 block text-lg transition;
+}
+
+.contact-card__note {
+  @apply text-muted mt-2 text-sm;
+}
+
+/* --- Призыв к бронированию --------------------------------------------- */
+.cta-wrap {
+  @apply px-5 pt-8 pb-20 sm:px-8 lg:pb-28;
+}
+
+/* Фон задаём сами, чтобы не конфликтовать с .surface. */
+.cta {
+  @apply mx-auto flex w-full max-w-7xl flex-col items-center gap-6 rounded-[2rem] border border-white/10 px-6 py-14 text-center backdrop-blur-sm sm:px-12;
+  background-color: rgb(12 11 17 / 0.75);
+  background-image: radial-gradient(90% 120% at 50% 0%, rgb(201 162 39 / 0.16), transparent 65%);
+}
+
+.cta__title {
+  @apply font-display text-cream max-w-2xl text-3xl font-light sm:text-4xl md:text-5xl;
+}
+
+.cta__note {
+  @apply text-muted text-xs;
+}

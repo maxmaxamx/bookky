@@ -1,0 +1,106 @@
+<section class="admin-page">
+  <div class="admin__shell">
+    <header class="admin__head">
+      <div>
+        <p class="eyebrow">BOOKKY · ПЕРСОНАЛ</p>
+        <h1 class="admin__title">Бронирования</h1>
+        <p class="admin__lead">Список резервов зала по дате и времени.</p>
+      </div>
+      <p class="admin__notice" role="note">Управление доступно только авторизованным администраторам.</p>
+    </header>
+
+    <section class="admin__metrics" aria-label="Сводка бронирований">
+      <div class="admin__metric"><span>Всего</span><strong>{{ counts().total }}</strong></div>
+      <div class="admin__metric"><span>Ожидают</span><strong>{{ counts().pending }}</strong></div>
+      <div class="admin__metric"><span>Подтверждены</span><strong>{{ counts().confirmed }}</strong></div>
+    </section>
+
+    <section class="admin__controls" aria-label="Фильтры бронирований">
+      <label class="admin__control">
+        <span class="field-label">Статус</span>
+        <select class="field-input admin__input" [value]="statusFilter()" (change)="setStatusFilter($event)">
+          <option value="all">Все статусы</option>
+          <option value="Pending">Ожидают</option>
+          <option value="Confirmed">Подтверждены</option>
+          <option value="Cancelled">Отменены</option>
+        </select>
+      </label>
+      <label class="admin__control">
+        <span class="field-label">Дата</span>
+        <input class="field-input admin__input" type="date" [value]="dateFilter()" (input)="setDateFilter($event)" />
+      </label>
+      <button class="btn btn-outline btn-sm admin__refresh" type="button" [disabled]="loading()" (click)="loadBookings()">
+        Обновить
+      </button>
+      @if (statusFilter() !== 'all' || dateFilter()) {
+        <button class="btn btn-ghost btn-sm admin__clear" type="button" (click)="clearFilters()">
+          Сбросить фильтры
+        </button>
+      }
+    </section>
+
+    @if (error()) {
+      <p class="admin__error" role="alert">{{ error() }}</p>
+    }
+
+    @if (loading()) {
+      <p class="admin__state" role="status">Загружаем бронирования…</p>
+    } @else if (filteredBookings().length === 0) {
+      <p class="admin__state">
+        {{ bookings().length === 0 ? 'Бронирований пока нет.' : 'По выбранным фильтрам ничего не найдено.' }}
+      </p>
+    } @else {
+      <div class="admin__table-wrap">
+        <table class="admin__table">
+          <thead>
+            <tr>
+              <th scope="col">Визит</th>
+              <th scope="col">Гость</th>
+              <th scope="col">Стол</th>
+              <th scope="col">Гости</th>
+              <th scope="col">Номер</th>
+              <th scope="col">Статус</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (booking of filteredBookings(); track booking.id) {
+              <tr>
+                <td data-label="Визит">
+                  <strong>{{ dateLabel(booking.date) }}</strong>
+                  <span class="admin__secondary">{{ booking.time }}</span>
+                </td>
+                <td data-label="Гость">
+                  <strong>{{ booking.name }}</strong>
+                  <a class="admin__secondary admin__phone" [href]="'tel:' + booking.phone">{{ booking.phone }}</a>
+                  @if (booking.comment) {
+                    <span class="admin__comment">{{ booking.comment }}</span>
+                  }
+                </td>
+                <td data-label="Стол">{{ booking.table }}</td>
+                <td data-label="Гости">{{ guestsLabel(booking.guests) }}</td>
+                <td data-label="Номер"><span class="admin__id">{{ booking.id }}</span></td>
+                <td data-label="Статус">
+                  <select
+                    class="admin__status"
+                    [class.admin__status--pending]="booking.status === 'Pending'"
+                    [class.admin__status--confirmed]="booking.status === 'Confirmed'"
+                    [class.admin__status--cancelled]="booking.status === 'Cancelled'"
+                    [value]="booking.status"
+                    [disabled]="savingIds().has(booking.id)"
+                    [attr.aria-label]="'Статус брони ' + booking.id"
+                    (change)="updateStatus(booking, $event)"
+                  >
+                    <option value="Pending">{{ statusLabel('Pending') }}</option>
+                    <option value="Confirmed">{{ statusLabel('Confirmed') }}</option>
+                    <option value="Cancelled">{{ statusLabel('Cancelled') }}</option>
+                  </select>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="admin__result-count">Показано: {{ filteredBookings().length }}</p>
+    }
+  </div>
+</section>

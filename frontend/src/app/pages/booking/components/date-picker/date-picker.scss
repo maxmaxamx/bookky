@@ -1,0 +1,93 @@
+@reference '../../../../../styles.css';
+
+/* --- Быстрый выбор даты ------------------------------------------------- */
+.dp-quick {
+  @apply no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1;
+}
+
+.dp-chip {
+  @apply rounded-full border px-4 py-2 text-xs whitespace-nowrap transition sm:text-sm;
+}
+
+.dp-chip--on {
+  @apply border-transparent bg-gradient-to-r from-gold-300 to-gold-500 font-medium text-ink-950;
+}
+
+.dp-chip--idle {
+  @apply border-white/12 text-muted hover:border-gold-400/40 hover:text-gold-200;
+}
+
+.dp-chip__note {
+  @apply ml-2 text-[0.65rem] opacity-70;
+}
+
+/* --- Календарь ---------------------------------------------------------- */
+.dp-layout {
+  @apply grid gap-6 lg:grid-cols-[minmax(0,19rem)_1fr];
+}
+
+.dp-calendar {
+  @apply rounded-2xl border border-white/10 bg-ink-950/50 p-4;
+}
+
+.dp-nav {
+  @apply text-cream flex size-9 items-center justify-center rounded-full border border-white/10 transition hover:border-gold-400/40 hover:text-gold-200 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:text-cream;
+}
+
+.dp-month {
+  @apply font-display text-cream text-lg whitespace-nowrap;
+}
+
+.dp-grid {
+  @apply grid grid-cols-7 gap-1;
+}
+
+.dp-weekday {
+  @apply text-muted py-1 text-center text-[0.65rem] tracking-wider uppercase;
+}
+
+.dp-day {
+  @apply text-cream/75 flex h-9 w-full items-center justify-center rounded-full text-sm transition;
+}
+
+/* Модификаторы объявлены после базового класса, чтобы перекрывать его. */
+.dp-day--free {
+  @apply hover:bg-white/5 hover:text-cream;
+}
+
+.dp-day--today {
+  @apply border border-gold-400/40 text-gold-200 hover:bg-gold-400/10;
+}
+
+.dp-day--off {
+  @apply cursor-not-allowed text-white/20 line-through;
+}
+
+.dp-day--on {
+  @apply bg-gradient-to-br from-gold-300 to-gold-500 font-medium text-ink-950 shadow-[0_10px_22px_-14px_rgb(201_162_39_/_1)];
+}
+
+/* --- Легенда ------------------------------------------------------------ */
+.dp-selected {
+  @apply font-display text-cream mt-3 text-2xl font-light;
+}
+
+.dp-legend {
+  @apply text-muted flex flex-wrap gap-x-6 gap-y-3 text-xs;
+
+  li {
+    @apply flex items-center gap-2;
+  }
+}
+
+.dp-legend__dot {
+  @apply size-3 rounded-full bg-white/10;
+
+  &--today {
+    @apply border border-gold-400/40 bg-transparent;
+  }
+
+  &--on {
+    @apply bg-gradient-to-br from-gold-300 to-gold-500;
+  }
+}
