@@ -1,106 +1,374 @@
 <section class="admin-page">
   <div class="admin__shell">
+    <!-- Шапка профиля администратора -->
     <header class="admin__head">
-      <div>
-        <p class="eyebrow">BOOKKY · ПЕРСОНАЛ</p>
-        <h1 class="admin__title">Бронирования</h1>
-        <p class="admin__lead">Список резервов зала по дате и времени.</p>
+      <div class="admin__head-info">
+        <div class="admin__head-badge">
+          <span class="admin__badge-tag">BOOKKY · ПЕРСОНАЛ</span>
+          <span class="admin__badge-role">Панель управления</span>
+        </div>
+        <h1 class="admin__title">Администрирование зала</h1>
+        <p class="admin__lead">
+          Управление резервами столиков, мониторинг занятости зала и предзаказы кухни.
+          @if (auth?.user(); as user) {
+            <span class="admin__user-tag">· {{ user.email }}</span>
+          }
+        </p>
       </div>
-      <p class="admin__notice" role="note">Управление доступно только авторизованным администраторам.</p>
+
+      <!-- Переключатель режима отображения -->
+      <div class="admin__view-switch" role="tablist" aria-label="Режим отображения">
+        <button
+          class="admin__switch-btn"
+          [class.admin__switch-btn--active]="viewMode() === 'hall'"
+          role="tab"
+          type="button"
+          (click)="viewMode.set('hall')"
+        >
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M9 21V9" />
+          </svg>
+          Схема зала
+        </button>
+        <button
+          class="admin__switch-btn"
+          [class.admin__switch-btn--active]="viewMode() === 'table'"
+          role="tab"
+          type="button"
+          (click)="viewMode.set('table')"
+        >
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+          Таблица броней
+        </button>
+      </div>
     </header>
 
+    <!-- Сводные метрики -->
     <section class="admin__metrics" aria-label="Сводка бронирований">
-      <div class="admin__metric"><span>Всего</span><strong>{{ counts().total }}</strong></div>
-      <div class="admin__metric"><span>Ожидают</span><strong>{{ counts().pending }}</strong></div>
-      <div class="admin__metric"><span>Подтверждены</span><strong>{{ counts().confirmed }}</strong></div>
+      <div class="admin__metric">
+        <span>Всего резервов</span>
+        <strong>{{ counts().total }}</strong>
+      </div>
+      <div class="admin__metric">
+        <span>Ожидают подтверждения</span>
+        <strong class="text-gold-300">{{ counts().pending }}</strong>
+      </div>
+      <div class="admin__metric">
+        <span>Подтверждены</span>
+        <strong class="text-emerald-300">{{ counts().confirmed }}</strong>
+      </div>
+      <div class="admin__metric">
+        <span>Блюд в предзаказе</span>
+        <strong class="text-cream">{{ counts().preorders }}</strong>
+      </div>
     </section>
 
-    <section class="admin__controls" aria-label="Фильтры бронирований">
-      <label class="admin__control">
-        <span class="field-label">Статус</span>
-        <select class="field-input admin__input" [value]="statusFilter()" (change)="setStatusFilter($event)">
-          <option value="all">Все статусы</option>
-          <option value="Pending">Ожидают</option>
-          <option value="Confirmed">Подтверждены</option>
-          <option value="Cancelled">Отменены</option>
-        </select>
-      </label>
-      <label class="admin__control">
-        <span class="field-label">Дата</span>
-        <input class="field-input admin__input" type="date" [value]="dateFilter()" (input)="setDateFilter($event)" />
-      </label>
-      <button class="btn btn-outline btn-sm admin__refresh" type="button" [disabled]="loading()" (click)="loadBookings()">
-        Обновить
-      </button>
-      @if (statusFilter() !== 'all' || dateFilter()) {
-        <button class="btn btn-ghost btn-sm admin__clear" type="button" (click)="clearFilters()">
-          Сбросить фильтры
+    <!-- РЕЖИМ 1: ИНТЕРАКТИВНАЯ СХЕМА ЗАЛА (HALL MAP) -->
+    @if (viewMode() === 'hall') {
+      <section class="admin__hall-section">
+        <div class="admin__hall-controls">
+        <div class="admin__hall-filter-group">
+          <label class="admin__control">
+            <span class="field-label">Дата зала</span>
+            <input
+              class="field-input admin__input"
+              type="date"
+              [value]="hallDate()"
+              (change)="setHallDate($event)"
+            />
+          </label>
+        </div>
+
+        <div class="admin__hall-slots-wrap">
+          <span class="field-label">Слот времени</span>
+          <div class="admin__hall-slots">
+            @for (slot of slotTimes; track slot) {
+              <button
+                class="admin__slot-chip"
+                [class.admin__slot-chip--active]="hallTime() === slot"
+                type="button"
+                (click)="setHallTime(slot)"
+              >
+                {{ slot }}
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="admin__hall-status-bar">
+        <p class="admin__hall-summary">
+          Зал на <strong>{{ dateLabel(hallDate()) }}</strong> в <strong>{{ hallTime() }}</strong>:
+          занято столов: <strong class="text-gold-200">{{ hallOccupiedCount() }} из {{ hallTables().length }}</strong>
+        </p>
+        <ul class="admin__hall-legend">
+          <li><span class="admin__legend-dot admin__legend-dot--free"></span>Свободен</li>
+          <li><span class="admin__legend-dot admin__legend-dot--pending"></span>Ожидает бронь</li>
+          <li><span class="admin__legend-dot admin__legend-dot--confirmed"></span>Подтверждён</li>
+        </ul>
+      </div>
+
+      <div class="admin__hall-grid-container">
+        <!-- Карта зала -->
+        <div class="admin__map-wrapper">
+          <div class="admin__map-room">
+            <div class="admin__map-zone admin__map-zone--windows">ПАНОРАМНЫЕ ОКНА</div>
+            <div class="admin__map-zone admin__map-zone--bar">БАР</div>
+            <div class="admin__map-zone admin__map-zone--kitchen">КУХНЯ</div>
+            <div class="admin__map-zone admin__map-zone--entrance">ВХОД</div>
+
+            @for (table of hallTables(); track table.id) {
+              <button
+                class="admin__table-box"
+                [class.admin__table-box--free]="table.available"
+                [class.admin__table-box--pending]="!table.available && table.activeBooking?.status === 'Pending'"
+                [class.admin__table-box--confirmed]="!table.available && table.activeBooking?.status === 'Confirmed'"
+                [class.admin__table-box--selected]="selectedTable()?.id === table.id"
+                [style.grid-area]="table.position"
+                type="button"
+                (click)="selectHallTable(table)"
+              >
+                <div class="admin__table-top">
+                  <span class="admin__table-id">{{ table.id }}</span>
+                  <span class="admin__table-seats">{{ table.seats }} мест</span>
+                </div>
+
+                <div class="admin__table-status-label">
+                  @if (table.available) {
+                    <span class="admin__pill-free">Свободен</span>
+                  } @else {
+                    <span class="admin__pill-busy">
+                      {{ table.activeBooking?.name ?? 'Занят' }}
+                    </span>
+                    @if (table.activeBooking?.preorder && table.activeBooking!.preorder!.length > 0) {
+                      <span class="admin__pill-food" title="Есть предзаказ блюд">🍽️ Предзаказ</span>
+                    }
+                  }
+                </div>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Боковая панель инспектора выбранного стола -->
+        <aside class="admin__inspector">
+          @if (selectedTable(); as t) {
+            <div class="admin__inspector-card">
+              <div class="admin__inspector-head">
+                <div>
+                  <h3 class="admin__inspector-title">Стол {{ t.id }}</h3>
+                  <p class="admin__inspector-sub">{{ t.zone }} · до {{ guestsLabel(t.seats) }}</p>
+                </div>
+                <span
+                  class="admin__inspector-status-badge"
+                  [class.admin__inspector-status-badge--free]="t.available"
+                  [class.admin__inspector-status-badge--busy]="!t.available"
+                >
+                  {{ t.available ? 'Свободен' : 'Занят' }}
+                </span>
+              </div>
+
+              @if (t.activeBooking; as b) {
+                <div class="admin__inspector-details">
+                  <div class="admin__inspector-row">
+                    <span class="admin__inspector-label">Гость</span>
+                    <strong class="admin__inspector-val">{{ b.name }}</strong>
+                  </div>
+                  <div class="admin__inspector-row">
+                    <span class="admin__inspector-label">Телефон</span>
+                    <a class="admin__inspector-val admin__phone" [href]="'tel:' + b.phone">{{ b.phone }}</a>
+                  </div>
+                  <div class="admin__inspector-row">
+                    <span class="admin__inspector-label">Время визита</span>
+                    <span class="admin__inspector-val text-gold-300 font-semibold">{{ b.time }} ({{ dateLabel(b.date) }})</span>
+                  </div>
+                  <div class="admin__inspector-row">
+                    <span class="admin__inspector-label">Количество гостей</span>
+                    <span class="admin__inspector-val">{{ guestsLabel(b.guests) }}</span>
+                  </div>
+                  <div class="admin__inspector-row">
+                    <span class="admin__inspector-label">Номер брони</span>
+                    <span class="admin__id">{{ b.id }}</span>
+                  </div>
+
+                  @if (b.comment) {
+                    <div class="admin__inspector-comment">
+                      <span class="admin__inspector-label">Пожелания:</span>
+                      <p>{{ b.comment }}</p>
+                    </div>
+                  }
+
+                  <!-- Чек предзаказа кухни -->
+                  @if (b.preorder && b.preorder.length > 0) {
+                    <div class="admin__preorder-ticket">
+                      <div class="admin__preorder-ticket-head">
+                        <span class="admin__preorder-ticket-title">🍽️ Заказ кухни к приходу</span>
+                        <span class="admin__preorder-ticket-sum">{{ formatRub(preorderTotal(b.preorder)) }}</span>
+                      </div>
+                      <ul class="admin__preorder-ticket-list">
+                        @for (dish of b.preorder; track dish.dishId) {
+                          <li class="admin__preorder-ticket-item">
+                            <span class="admin__ticket-dish">{{ dish.name }}</span>
+                            <span class="admin__ticket-qty">{{ dish.quantity }} шт</span>
+                            <span class="admin__ticket-price">{{ formatRub(dish.price * dish.quantity) }}</span>
+                          </li>
+                        }
+                      </ul>
+                    </div>
+                  } @else {
+                    <p class="admin__no-preorder">Предзаказ блюд не оформлен (заказ в зале).</p>
+                  }
+
+                  <div class="admin__inspector-status-change">
+                    <span class="admin__inspector-label">Изменить статус:</span>
+                    <select
+                      class="admin__status"
+                      [class.admin__status--pending]="b.status === 'Pending'"
+                      [class.admin__status--confirmed]="b.status === 'Confirmed'"
+                      [class.admin__status--cancelled]="b.status === 'Cancelled'"
+                      [value]="b.status"
+                      [disabled]="savingIds().has(b.id)"
+                      (change)="updateStatus(b, $event)"
+                    >
+                      <option value="Pending">Ожидает</option>
+                      <option value="Confirmed">Подтверждена</option>
+                      <option value="Cancelled">Отменена</option>
+                    </select>
+                  </div>
+                </div>
+              } @else {
+                <div class="admin__inspector-empty">
+                  <p>Этот стол свободен на слот <strong>{{ hallTime() }}</strong>.</p>
+                  <p class="text-xs text-muted mt-2">Гости могут забронировать его онлайн или администратор может закрепить бронь по телефону.</p>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="admin__inspector-placeholder">
+              <svg class="size-8 text-muted mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <path d="M3 9h18M9 21V9" />
+              </svg>
+              <p>Нажмите на любой столик на плане зала, чтобы просмотреть бронь и предзаказ кухни.</p>
+            </div>
+          }
+        </aside>
+      </div>
+    </section>
+  }
+
+  <!-- РЕЖИМ 2: ТАБЛИЦА ВСЕХ БРОНИРОВАНИЙ -->
+  @if (viewMode() === 'table') {
+    <section class="admin__table-section">
+      <div class="admin__controls" aria-label="Фильтры бронирований">
+        <label class="admin__control">
+          <span class="field-label">Статус</span>
+          <select class="field-input admin__input" [value]="statusFilter()" (change)="setStatusFilter($event)">
+            <option value="all">Все статусы</option>
+            <option value="Pending">Ожидают</option>
+            <option value="Confirmed">Подтверждены</option>
+            <option value="Cancelled">Отменены</option>
+          </select>
+        </label>
+        <label class="admin__control">
+          <span class="field-label">Дата</span>
+          <input class="field-input admin__input" type="date" [value]="dateFilter()" (input)="setDateFilter($event)" />
+        </label>
+        <button class="btn btn-outline btn-sm admin__refresh" type="button" [disabled]="loading()" (click)="loadBookings()">
+          Обновить
         </button>
+        @if (statusFilter() !== 'all' || dateFilter()) {
+          <button class="btn btn-ghost btn-sm admin__clear" type="button" (click)="clearFilters()">
+            Сбросить фильтры
+          </button>
+        }
+      </div>
+
+      @if (error()) {
+        <p class="admin__error" role="alert">{{ error() }}</p>
+      }
+
+      @if (loading()) {
+        <p class="admin__state" role="status">Загружаем бронирования…</p>
+      } @else if (filteredBookings().length === 0) {
+        <p class="admin__state">
+          {{ bookings().length === 0 ? 'Бронирований пока нет.' : 'По выбранным фильтрам ничего не найдено.' }}
+        </p>
+      } @else {
+        <div class="admin__table-wrap">
+          <table class="admin__table">
+            <thead>
+              <tr>
+                <th scope="col">Визит</th>
+                <th scope="col">Гость</th>
+                <th scope="col">Стол</th>
+                <th scope="col">Гости</th>
+                <th scope="col">Предзаказ блюд</th>
+                <th scope="col">Номер</th>
+                <th scope="col">Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (booking of filteredBookings(); track booking.id) {
+                <tr>
+                  <td data-label="Визит">
+                    <strong>{{ dateLabel(booking.date) }}</strong>
+                    <span class="admin__secondary">{{ booking.time }}</span>
+                  </td>
+                  <td data-label="Гость">
+                    <strong>{{ booking.name }}</strong>
+                    <a class="admin__secondary admin__phone" [href]="'tel:' + booking.phone">{{ booking.phone }}</a>
+                    @if (booking.comment) {
+                      <span class="admin__comment">{{ booking.comment }}</span>
+                    }
+                  </td>
+                  <td data-label="Стол">{{ booking.table }}</td>
+                  <td data-label="Гости">{{ guestsLabel(booking.guests) }}</td>
+                  <td data-label="Предзаказ блюд">
+                    @if (booking.preorder && booking.preorder.length > 0) {
+                      <div class="admin__table-preorder">
+                        <span class="admin__table-preorder-badge">
+                          {{ booking.preorder.length }} поз. · {{ formatRub(preorderTotal(booking.preorder)) }}
+                        </span>
+                        <div class="admin__table-preorder-items">
+                          @for (dish of booking.preorder; track dish.dishId) {
+                            <span class="admin__table-dish-chip">{{ dish.name }} × {{ dish.quantity }}</span>
+                          }
+                        </div>
+                      </div>
+                    } @else {
+                      <span class="admin__secondary">—</span>
+                    }
+                  </td>
+                  <td data-label="Номер"><span class="admin__id">{{ booking.id }}</span></td>
+                  <td data-label="Статус">
+                    <select
+                      class="admin__status"
+                      [class.admin__status--pending]="booking.status === 'Pending'"
+                      [class.admin__status--confirmed]="booking.status === 'Confirmed'"
+                      [class.admin__status--cancelled]="booking.status === 'Cancelled'"
+                      [value]="booking.status"
+                      [disabled]="savingIds().has(booking.id)"
+                      [attr.aria-label]="'Статус брони ' + booking.id"
+                      (change)="updateStatus(booking, $event)"
+                    >
+                      <option value="Pending">{{ statusLabel('Pending') }}</option>
+                      <option value="Confirmed">{{ statusLabel('Confirmed') }}</option>
+                      <option value="Cancelled">{{ statusLabel('Cancelled') }}</option>
+                    </select>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="admin__result-count">Показано: {{ filteredBookings().length }}</p>
       }
     </section>
-
-    @if (error()) {
-      <p class="admin__error" role="alert">{{ error() }}</p>
-    }
-
-    @if (loading()) {
-      <p class="admin__state" role="status">Загружаем бронирования…</p>
-    } @else if (filteredBookings().length === 0) {
-      <p class="admin__state">
-        {{ bookings().length === 0 ? 'Бронирований пока нет.' : 'По выбранным фильтрам ничего не найдено.' }}
-      </p>
-    } @else {
-      <div class="admin__table-wrap">
-        <table class="admin__table">
-          <thead>
-            <tr>
-              <th scope="col">Визит</th>
-              <th scope="col">Гость</th>
-              <th scope="col">Стол</th>
-              <th scope="col">Гости</th>
-              <th scope="col">Номер</th>
-              <th scope="col">Статус</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (booking of filteredBookings(); track booking.id) {
-              <tr>
-                <td data-label="Визит">
-                  <strong>{{ dateLabel(booking.date) }}</strong>
-                  <span class="admin__secondary">{{ booking.time }}</span>
-                </td>
-                <td data-label="Гость">
-                  <strong>{{ booking.name }}</strong>
-                  <a class="admin__secondary admin__phone" [href]="'tel:' + booking.phone">{{ booking.phone }}</a>
-                  @if (booking.comment) {
-                    <span class="admin__comment">{{ booking.comment }}</span>
-                  }
-                </td>
-                <td data-label="Стол">{{ booking.table }}</td>
-                <td data-label="Гости">{{ guestsLabel(booking.guests) }}</td>
-                <td data-label="Номер"><span class="admin__id">{{ booking.id }}</span></td>
-                <td data-label="Статус">
-                  <select
-                    class="admin__status"
-                    [class.admin__status--pending]="booking.status === 'Pending'"
-                    [class.admin__status--confirmed]="booking.status === 'Confirmed'"
-                    [class.admin__status--cancelled]="booking.status === 'Cancelled'"
-                    [value]="booking.status"
-                    [disabled]="savingIds().has(booking.id)"
-                    [attr.aria-label]="'Статус брони ' + booking.id"
-                    (change)="updateStatus(booking, $event)"
-                  >
-                    <option value="Pending">{{ statusLabel('Pending') }}</option>
-                    <option value="Confirmed">{{ statusLabel('Confirmed') }}</option>
-                    <option value="Cancelled">{{ statusLabel('Cancelled') }}</option>
-                  </select>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      <p class="admin__result-count">Показано: {{ filteredBookings().length }}</p>
-    }
+  }
   </div>
 </section>
+

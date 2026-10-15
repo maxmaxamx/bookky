@@ -1,12 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { BookingConfirmation, BookingStatus } from '../../core/models/booking.model';
+import { BookingConfirmation, BookingStatus, PreorderItem } from '../../core/models/booking.model';
 import { BookingService } from '../../core/services/booking.service';
 import { AuthService } from '../../core/services/auth.service';
-import { formatDateLong, fromIsoDate, guestsLabel } from '../../core/utils/date.util';
+import { formatDateLong, fromIsoDate, guestsLabel, toIsoDate } from '../../core/utils/date.util';
+
+type AccountTab = 'upcoming' | 'all' | 'history';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, DatePipe],
   selector: 'app-account',
   styleUrl: './account.scss',
   templateUrl: './account.html',
@@ -18,6 +21,48 @@ export class Account {
   protected readonly loading = signal(true);
   protected readonly error = signal('');
   protected readonly cancellingIds = signal<ReadonlySet<string>>(new Set());
+  protected readonly activeTab = signal<AccountTab>('all');
+
+  protected readonly todayIso = toIsoDate(new Date());
+
+  protected readonly upcomingBookings = computed(() =>
+    this.bookings().filter(
+      (b) => b.status !== 'Cancelled' && b.date >= this.todayIso,
+    ),
+  );
+
+  protected readonly historyBookings = computed(() =>
+    this.bookings().filter(
+      (b) => b.status === 'Cancelled' || b.date < this.todayIso,
+    ),
+  );
+
+  protected readonly displayedBookings = computed(() => {
+    switch (this.activeTab()) {
+      case 'upcoming':
+        return this.upcomingBookings();
+      case 'history':
+        return this.historyBookings();
+      case 'all':
+      default:
+        return this.bookings();
+    }
+  });
+
+  protected readonly stats = computed(() => {
+    const all = this.bookings();
+    const upcoming = this.upcomingBookings();
+    const totalPreorderItems = upcoming.reduce((acc, b) => {
+      const items = b.preorder ?? [];
+      return acc + items.reduce((sum, item) => sum + item.quantity, 0);
+    }, 0);
+
+    return {
+      total: all.length,
+      upcoming: upcoming.length,
+      preordersCount: totalPreorderItems,
+    };
+  });
 
   constructor() {
     this.loadBookings();
@@ -68,6 +113,20 @@ export class Account {
       Confirmed: 'Подтверждена',
       Cancelled: 'Отменена',
     }[status];
+  }
+
+  protected preorderTotal(preorder?: PreorderItem[]): number {
+    if (!preorder || preorder.length === 0) return 0;
+    return preorder.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  }
+
+  protected formatRub(value: number): string {
+    return `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+  }
+
+  protected userInitials(email?: string): string {
+    if (!email) return 'Г';
+    return email.charAt(0).toUpperCase();
   }
 
   private setCancelling(id: string, cancelling: boolean): void {

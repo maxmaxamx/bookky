@@ -2,9 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
+  AdminTableDetail,
   BookingConfirmation,
   BookingRequest,
   BookingStatus,
+  MenuItem,
   RestaurantTable,
   SlotPeriod,
   TimeSlot,
@@ -125,4 +127,15 @@ export class BookingService {
       { status },
     );
   }
+
+  getMenu(): Observable<MenuItem[]> {
+    return this.http.get<MenuItem[]>('/api/menu');
+  }
+
+  getAdminHallStatus(date: string, time: string): Observable<AdminTableDetail[]> {
+    return this.http.get<AdminTableDetail[]>('/api/admin/hall-status', {
+      params: { date, time },
+    });
+  }
 }
+

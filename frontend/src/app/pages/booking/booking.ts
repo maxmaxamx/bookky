@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal, viewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BookingConfirmation, GuestDetails } from '../../core/models/booking.model';
+import { BookingConfirmation, GuestDetails, PreorderItem } from '../../core/models/booking.model';
 import { BookingService, hasBookableSlots } from '../../core/services/booking.service';
 import { SITE } from '../../core/site';
 import { addDays, startOfDay, toIsoDate } from '../../core/utils/date.util';
@@ -9,6 +9,7 @@ import { BookingStep } from './components/booking-step/booking-step';
 import { BookingSummary } from './components/booking-summary/booking-summary';
 import { ConfirmationModal } from './components/confirmation-modal/confirmation-modal';
 import { DatePicker } from './components/date-picker/date-picker';
+import { DishPicker } from './components/dish-picker/dish-picker';
 import { GuestCounter } from './components/guest-counter/guest-counter';
 import { TablePicker } from './components/table-picker/table-picker';
 import { TimeSlots } from './components/time-slots/time-slots';
@@ -32,6 +33,7 @@ function pickFirstAvailableDate(today: Date = new Date()): Date {
     BookingSummary,
     ConfirmationModal,
     DatePicker,
+    DishPicker,
     GuestCounter,
     TablePicker,
     TimeSlots,
@@ -51,6 +53,8 @@ export class Booking {
   protected readonly time = signal<string | null>(null);
   protected readonly guests = signal(2);
   protected readonly tableId = signal<string | null>(null);
+  protected readonly preorder = signal<PreorderItem[]>([]);
+
   protected readonly tableLabel = computed(() => {
     const id = this.tableId();
     const table = this.bookingService.getTableDetails(id);
@@ -111,6 +115,7 @@ export class Booking {
         name: details.name,
         phone: details.phone,
         comment: details.comment || undefined,
+        preorder: this.preorder().length > 0 ? this.preorder() : undefined,
       })
       .subscribe({
         next: (confirmation) => {
@@ -139,6 +144,7 @@ export class Booking {
     this.apiError.set(null);
     this.time.set(null);
     this.tableId.set(null);
+    this.preorder.set([]);
     this.form().reset();
   }
 }

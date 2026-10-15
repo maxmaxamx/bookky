@@ -34,7 +34,7 @@ export class ConfirmationModal {
     if (!booking) {
       return [];
     }
-    return [
+    const rowsList = [
       { label: 'Номер брони', value: booking.id },
       { label: 'Дата', value: formatDateLong(fromIsoDate(booking.date)) },
       { label: 'Время', value: booking.time },
@@ -43,7 +43,19 @@ export class ConfirmationModal {
       { label: 'Имя', value: booking.name },
       { label: 'Телефон', value: booking.phone },
     ];
+
+    if (booking.preorder && booking.preorder.length > 0) {
+      const total = booking.preorder.reduce((acc, item) => acc + item.price * item.quantity, 0);
+      const itemsList = booking.preorder.map((item) => `${item.name} × ${item.quantity}`).join(', ');
+      rowsList.push({
+        label: 'Предзаказ блюд',
+        value: `${itemsList} (${new Intl.NumberFormat('ru-RU').format(total)} ₽)`,
+      });
+    }
+
+    return rowsList;
   });
+
 
   constructor() {
     // Пока модалка открыта — блокируем прокрутку страницы.

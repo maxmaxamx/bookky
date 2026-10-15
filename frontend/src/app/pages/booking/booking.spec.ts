@@ -33,6 +33,7 @@ const bookingServiceStub = {
       status: 'Pending',
       createdAt: new Date().toISOString(),
     }),
+  getMenu: () => of([]),
 };
 
 function availableSlot(root: HTMLElement, time: string): HTMLButtonElement {

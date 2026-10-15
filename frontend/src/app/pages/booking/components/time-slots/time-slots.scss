@@ -22,7 +22,7 @@
 
 /* --- Слоты -------------------------------------------------------------- */
 .ts-slot {
-  @apply flex flex-col items-center gap-0.5 rounded-xl border px-2 py-2.5 text-sm transition;
+  @apply flex flex-col items-center justify-center gap-1.5 rounded-xl border px-2 py-3 transition text-center min-h-[4rem];
 }
 
 .ts-slot--busy {
@@ -34,11 +34,40 @@
 }
 
 .ts-slot--free {
-  @apply border-white/10 text-cream/85 hover:border-gold-400/50 hover:bg-gold-400/10 hover:text-gold-100;
+  @apply border-white/10 text-cream/90 hover:border-gold-400/50 hover:bg-gold-400/10 hover:text-gold-100;
+  background-color: rgb(255 255 255 / 0.02);
 }
 
-.ts-slot__note {
-  @apply text-[0.6rem] opacity-70;
+.ts-slot__time {
+  @apply text-sm font-semibold tracking-wide tabular-nums;
+}
+
+.ts-slot__tables {
+  @apply flex items-center justify-center gap-1 text-[0.62rem] leading-none whitespace-nowrap;
+}
+
+.ts-slot__tables--busy {
+  @apply opacity-50;
+}
+
+.ts-slot__tables-count {
+  @apply inline-flex min-w-4 h-4 px-1 items-center justify-center rounded-full text-[0.58rem] font-bold tabular-nums;
+}
+
+/* В свободном состоянии числовой бейдж полупрозрачный золотистый */
+.ts-slot--free .ts-slot__tables-count {
+  background-color: rgb(213 177 99 / 0.18);
+  color: var(--color-gold-200);
+}
+
+/* В выбранном состоянии — тёмный бейдж поверх золотого градиента */
+.ts-slot--on .ts-slot__tables-count {
+  background-color: rgb(8 7 11 / 0.25);
+  color: var(--color-ink-950);
+}
+
+.ts-slot__tables-label {
+  @apply opacity-80;
 }
 
 /* --- Пустое состояние --------------------------------------------------- */

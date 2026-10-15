@@ -19,7 +19,7 @@ export interface NavItem {
 export const NAV_ITEMS: readonly NavItem[] = [
   { label: 'Главная', link: '/' },
   { label: 'О ресторане', link: '/', fragment: 'about' },
-  { label: 'Меню', link: '/', fragment: 'menu' },
+  { label: 'Меню', link: '/menu' },
   { label: 'Бронирование', link: '/booking' },
   { label: 'Контакты', link: '/', fragment: 'contacts' },
 ];

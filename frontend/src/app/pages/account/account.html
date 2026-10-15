@@ -1,53 +1,183 @@
 <section class="account-page">
   <div class="account__shell">
-    <header class="account__head">
-      <div>
-        <p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p>
-        <h1 class="account__title">Мои бронирования</h1>
-        <p class="account__lead">{{ auth.user()?.email }}</p>
+    <!-- Шапка профиля пользователя -->
+    <div class="account__profile-card">
+      <div class="account__profile-main">
+        <div class="account__avatar" aria-hidden="true">
+          {{ userInitials(auth.user()?.email) }}
+        </div>
+        <div class="account__profile-info">
+          <div class="account__profile-tag">
+            <span class="account__badge">Личный кабинет</span>
+            <span class="account__role-chip">Гость BOOKKY</span>
+          </div>
+          <h1 class="account__title">{{ auth.user()?.email }}</h1>
+          <p class="account__profile-desc">Управление бронированиями столов и предзаказами кухни</p>
+        </div>
       </div>
-      <a class="btn btn-outline btn-sm" routerLink="/booking">Новая бронь</a>
-    </header>
+
+      <div class="account__profile-actions">
+        <a class="btn btn-gold btn-sm" routerLink="/booking">Забронировать столик</a>
+      </div>
+    </div>
+
+    <!-- Метрики профиля -->
+    <div class="account__stats-grid">
+      <div class="account__stat-card">
+        <span class="account__stat-label">Предстоящие визиты</span>
+        <strong class="account__stat-value text-gold-300">{{ stats().upcoming }}</strong>
+      </div>
+      <div class="account__stat-card">
+        <span class="account__stat-label">Блюд в предзаказе</span>
+        <strong class="account__stat-value text-cream">{{ stats().preordersCount }}</strong>
+      </div>
+      <div class="account__stat-card">
+        <span class="account__stat-label">Всего резервов</span>
+        <strong class="account__stat-value text-muted">{{ stats().total }}</strong>
+      </div>
+    </div>
+
+    <!-- Вкладки фильтрации броней -->
+    <div class="account__tabs-bar">
+      <div class="account__tabs">
+        <button
+          class="account__tab"
+          [class.account__tab--active]="activeTab() === 'upcoming'"
+          type="button"
+          (click)="activeTab.set('upcoming')"
+        >
+          Предстоящие ({{ upcomingBookings().length }})
+        </button>
+        <button
+          class="account__tab"
+          [class.account__tab--active]="activeTab() === 'all'"
+          type="button"
+          (click)="activeTab.set('all')"
+        >
+          Все бронирования ({{ bookings().length }})
+        </button>
+        <button
+          class="account__tab"
+          [class.account__tab--active]="activeTab() === 'history'"
+          type="button"
+          (click)="activeTab.set('history')"
+        >
+          История и отмены ({{ historyBookings().length }})
+        </button>
+      </div>
+
+      <button class="btn btn-outline btn-sm account__refresh-btn" type="button" [disabled]="loading()" (click)="loadBookings()">
+        Обновить
+      </button>
+    </div>
 
     @if (error()) {
       <p class="account__error" role="alert">{{ error() }}</p>
     }
 
     @if (loading()) {
-      <p class="account__state" role="status">Загружаем бронирования…</p>
-    } @else if (bookings().length === 0) {
+      <div class="account__state" role="status">
+        <p>Загружаем данные бронирований…</p>
+      </div>
+    } @else if (displayedBookings().length === 0) {
       <div class="account__empty">
-        <p>У вас пока нет бронирований.</p>
-        <a routerLink="/booking">Выбрать столик</a>
+        @if (activeTab() === 'upcoming') {
+          <p>У вас пока нет активных предстоящих бронирований.</p>
+          <a class="btn btn-gold btn-sm mt-3" routerLink="/booking">Забронировать столик онлайн</a>
+        } @else {
+          <p>В этой категории нет бронирований.</p>
+        }
       </div>
     } @else {
       <div class="account__list">
-        @for (booking of bookings(); track booking.id) {
-          <article class="account__booking">
-            <div class="account__when">
-              <p class="account__date">{{ dateLabel(booking.date) }}</p>
-              <p class="account__time">{{ booking.time }}</p>
+        @for (booking of displayedBookings(); track booking.id) {
+          <article class="account__card">
+            <div class="account__card-top">
+              <div class="account__when">
+                <span class="account__time">{{ booking.time }}</span>
+                <span class="account__date">{{ dateLabel(booking.date) }}</span>
+              </div>
+
+              <div class="account__card-badges">
+                <span
+                  class="account__status-badge"
+                  [class.account__status-badge--pending]="booking.status === 'Pending'"
+                  [class.account__status-badge--confirmed]="booking.status === 'Confirmed'"
+                  [class.account__status-badge--cancelled]="booking.status === 'Cancelled'"
+                >
+                  <span class="account__status-dot"></span>
+                  {{ statusLabel(booking.status) }}
+                </span>
+                <span class="account__id-badge">{{ booking.id }}</span>
+              </div>
             </div>
-            <div class="account__details">
-              <strong>{{ booking.table }}</strong>
-              <span>{{ guestsLabel(booking.guests) }} · {{ booking.id }}</span>
-              <span
-                class="account__status"
-                [class.account__status--pending]="booking.status === 'Pending'"
-                [class.account__status--confirmed]="booking.status === 'Confirmed'"
-                [class.account__status--cancelled]="booking.status === 'Cancelled'"
-              >{{ statusLabel(booking.status) }}</span>
+
+            <div class="account__card-body">
+              <div class="account__details-row">
+                <div class="account__detail-item">
+                  <span class="account__detail-label">Стол</span>
+                  <strong class="account__detail-val">{{ booking.table }}</strong>
+                </div>
+                <div class="account__detail-item">
+                  <span class="account__detail-label">Гости</span>
+                  <span class="account__detail-val">{{ guestsLabel(booking.guests) }}</span>
+                </div>
+                <div class="account__detail-item">
+                  <span class="account__detail-label">Имя гостя</span>
+                  <span class="account__detail-val">{{ booking.name }}</span>
+                </div>
+                <div class="account__detail-item">
+                  <span class="account__detail-label">Телефон</span>
+                  <span class="account__detail-val">{{ booking.phone }}</span>
+                </div>
+              </div>
+
+              @if (booking.comment) {
+                <div class="account__comment-box">
+                  <span class="account__comment-label">Пожелания:</span>
+                  <span class="account__comment-text">{{ booking.comment }}</span>
+                </div>
+              }
+
+              <!-- Блок предзаказанных блюд -->
+              @if (booking.preorder && booking.preorder.length > 0) {
+                <div class="account__preorder-box">
+                  <div class="account__preorder-head">
+                    <span class="account__preorder-title">Предзаказ к визиту</span>
+                    <span class="account__preorder-total">
+                      Сумма: <strong>{{ formatRub(preorderTotal(booking.preorder)) }}</strong>
+                    </span>
+                  </div>
+                  <ul class="account__preorder-items">
+                    @for (dish of booking.preorder; track dish.dishId) {
+                      <li class="account__preorder-item">
+                        <span class="account__dish-name">{{ dish.name }}</span>
+                        <span class="account__dish-qty">{{ dish.quantity }} × {{ formatRub(dish.price) }}</span>
+                        <span class="account__dish-subtotal">{{ formatRub(dish.price * dish.quantity) }}</span>
+                      </li>
+                    }
+                  </ul>
+                  <p class="account__preorder-note">Блюда будут поданы к вашему приходу. Оплата производится в ресторане.</p>
+                </div>
+              }
             </div>
-            @if (booking.status !== 'Cancelled') {
-              <button
-                class="btn btn-ghost account__cancel"
-                type="button"
-                [disabled]="cancellingIds().has(booking.id)"
-                (click)="cancel(booking)"
-              >
-                {{ cancellingIds().has(booking.id) ? 'Отменяем…' : 'Отменить' }}
-              </button>
-            }
+
+            <div class="account__card-footer">
+              <span class="account__created">Оформлена: {{ booking.createdAt | date: 'dd.MM.yyyy HH:mm' }}</span>
+
+              @if (booking.status !== 'Cancelled') {
+                <button
+                  class="btn btn-ghost btn-sm account__cancel account__cancel-btn"
+                  type="button"
+                  [disabled]="cancellingIds().has(booking.id)"
+                  (click)="cancel(booking)"
+                >
+                  {{ cancellingIds().has(booking.id) ? 'Отменяем…' : 'Отменить бронь' }}
+                </button>
+              } @else {
+                <span class="account__cancelled-label">Бронь аннулирована</span>
+              }
+            </div>
           </article>
         }
       </div>

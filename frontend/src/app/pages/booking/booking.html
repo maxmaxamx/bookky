@@ -75,6 +75,15 @@
 
         <app-booking-step
           step="05"
+          title="Предзаказ блюд"
+          hint="По желанию: выберите блюда заранее, чтобы кухня приготовила их к вашему приходу."
+          [done]="preorder().length > 0"
+        >
+          <app-dish-picker [(items)]="preorder" />
+        </app-booking-step>
+
+        <app-booking-step
+          step="06"
           title="Контактные данные"
           hint="Нужны, чтобы подтвердить бронь и предупредить об изменениях."
           [done]="modalOpen()"
@@ -94,11 +103,13 @@
           [time]="time()"
           [guests]="guests()"
           [table]="tableLabel()"
+          [preorder]="preorder()"
         />
       </aside>
     </div>
   </div>
 </section>
+
 
 <app-confirmation-modal
   [open]="modalOpen()"

@@ -8,6 +8,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home').then((m) => m.Home),
   },
   {
+    path: 'menu',
+    title: 'Меню — BOOKKY',
+    loadComponent: () => import('./pages/menu/menu-page').then((m) => m.MenuPage),
+  },
+  {
     path: 'booking',
     title: 'Бронирование столика — BOOKKY',
     canActivate: [userGuard],

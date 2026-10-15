@@ -49,8 +49,15 @@
               [attr.aria-label]="slot.time + ' — ' + slotHint(slot)"
               (click)="toggle(slot)"
             >
-              <span>{{ slot.time }}</span>
-              <span class="ts-slot__note">{{ slotHint(slot) }}</span>
+              <span class="ts-slot__time">{{ slot.time }}</span>
+              <span class="ts-slot__tables" [class.ts-slot__tables--busy]="!slot.available">
+                @if (slot.available) {
+                  <span class="ts-slot__tables-count">{{ slot.tablesLeft }}</span>
+                  <span class="ts-slot__tables-label">{{ tablesLabel(slot.tablesLeft) }}</span>
+                } @else {
+                  <span>занято</span>
+                }
+              </span>
             </button>
           }
         </div>
@@ -70,8 +77,15 @@
               [attr.aria-label]="slot.time + ' — ' + slotHint(slot)"
               (click)="toggle(slot)"
             >
-              <span>{{ slot.time }}</span>
-              <span class="ts-slot__note">{{ slotHint(slot) }}</span>
+              <span class="ts-slot__time">{{ slot.time }}</span>
+              <span class="ts-slot__tables" [class.ts-slot__tables--busy]="!slot.available">
+                @if (slot.available) {
+                  <span class="ts-slot__tables-count">{{ slot.tablesLeft }}</span>
+                  <span class="ts-slot__tables-label">{{ tablesLabel(slot.tablesLeft) }}</span>
+                } @else {
+                  <span>занято</span>
+                }
+              </span>
             </button>
           }
         </div>

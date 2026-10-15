@@ -29,6 +29,32 @@ export interface GuestDetails {
   consent: boolean;
 }
 
+/** Предзаказ конкретного блюда. */
+export interface PreorderItem {
+  dishId: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+/** Позиция из меню ресторана. */
+export interface MenuItem {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: 'starters' | 'mains' | 'desserts' | 'drinks';
+  tag?: string;
+  calories?: number;
+  weightGrams?: number;
+  image?: string;
+}
+
+/** Столик с информацией для администратора. */
+export interface AdminTableDetail extends RestaurantTable {
+  activeBooking?: BookingConfirmation;
+}
+
 /** Полный запрос на бронирование. */
 export interface BookingRequest {
   date: string;
@@ -38,6 +64,7 @@ export interface BookingRequest {
   name: string;
   phone: string;
   comment?: string;
+  preorder?: PreorderItem[];
 }
 
 /** Подтверждение успешной брони. */
@@ -61,3 +88,4 @@ export const SLOT_PERIOD_LABELS: Record<SlotPeriod, string> = {
   day: 'Дневные слоты',
   evening: 'Вечерние слоты',
 };
+

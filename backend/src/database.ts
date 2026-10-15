@@ -32,6 +32,7 @@ database.exec(`
     name TEXT NOT NULL,
     phone TEXT NOT NULL,
     comment TEXT,
+    preorder TEXT,
     status TEXT NOT NULL CHECK (status IN ('Pending', 'Confirmed', 'Cancelled')),
     created_at TEXT NOT NULL,
     table_label TEXT NOT NULL
@@ -40,3 +41,9 @@ database.exec(`
   CREATE INDEX IF NOT EXISTS bookings_date_time_idx ON bookings(date, time);
   CREATE INDEX IF NOT EXISTS bookings_owner_date_idx ON bookings(owner_id, date, time);
 `);
+
+try {
+  database.exec(`ALTER TABLE bookings ADD COLUMN preorder TEXT;`);
+} catch {
+  // column already exists
+}

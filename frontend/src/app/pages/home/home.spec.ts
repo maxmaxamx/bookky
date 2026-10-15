@@ -2,11 +2,30 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { Home } from './home';
 
+import { of } from 'rxjs';
+import { BookingService } from '../../core/services/booking.service';
+
+const mockBookingService = {
+  getMenu: () =>
+    of([
+      {
+        id: 'dish-1',
+        name: 'Тартар из тунца',
+        description: 'Сицилийские томаты, дижонский крем',
+        price: 1190,
+        category: 'starters',
+      },
+    ]),
+};
+
 describe('Home', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Home],
-      providers: [provideRouter([])],
+      providers: [
+        provideRouter([]),
+        { provide: BookingService, useValue: mockBookingService },
+      ],
     }).compileComponents();
   });
 

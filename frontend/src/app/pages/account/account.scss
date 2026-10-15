@@ -1,86 +1,261 @@
 @reference '../../../styles.css';
 
 .account-page {
-  @apply px-5 pt-14 pb-20 sm:px-8 lg:pt-20 lg:pb-24;
+  @apply px-4 pt-10 pb-20 sm:px-6 lg:px-8 lg:pt-14 lg:pb-24;
 }
 
 .account__shell {
-  @apply mx-auto w-full max-w-5xl;
+  @apply mx-auto w-full max-w-5xl flex flex-col gap-6;
 }
 
-.account__head {
-  @apply flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between;
+.account__profile-card {
+  @apply flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 rounded-2xl border border-white/10 p-5 sm:p-7;
+  background: linear-gradient(135deg, rgb(20 18 26 / 0.8), rgb(11 10 14 / 0.9));
+  box-shadow: 0 10px 30px -10px rgb(0 0 0 / 0.5);
+}
+
+.account__profile-main {
+  @apply flex items-center gap-4 sm:gap-5;
+}
+
+.account__avatar {
+  @apply size-14 sm:size-16 rounded-2xl flex items-center justify-center font-display text-2xl font-semibold border border-gold-400/40 text-gold-300;
+  background: radial-gradient(circle, rgb(213 177 99 / 0.2), rgb(213 177 99 / 0.05));
+}
+
+.account__profile-info {
+  @apply flex flex-col gap-1;
+}
+
+.account__profile-tag {
+  @apply flex items-center gap-2;
+}
+
+.account__badge {
+  @apply text-[0.65rem] uppercase tracking-wider font-semibold text-gold-400;
+}
+
+.account__role-chip {
+  @apply text-[0.62rem] rounded-full border border-white/10 px-2 py-0.5 text-muted;
 }
 
 .account__title {
-  @apply font-display text-cream mt-4 text-4xl leading-tight font-light sm:text-5xl;
+  @apply font-display text-cream text-xl sm:text-2xl font-light tracking-wide;
 }
 
-.account__lead {
-  @apply text-muted mt-3 text-sm;
-}
-
-.account__list {
-  @apply mt-6 divide-y divide-white/10;
-}
-
-.account__booking {
-  @apply grid gap-4 py-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_auto] sm:items-center;
-}
-
-.account__when {
-  @apply border-l border-gold-400/50 pl-4;
-}
-
-.account__date {
-  @apply text-cream text-sm;
-}
-
-.account__time {
-  @apply text-gold-300 mt-1 font-display text-2xl;
-}
-
-.account__details {
-  @apply flex flex-col gap-1 text-sm;
-}
-
-.account__details strong {
-  @apply text-cream font-medium;
-}
-
-.account__details > span:not(.account__status) {
+.account__profile-desc {
   @apply text-muted text-xs;
 }
 
-.account__status {
-  @apply mt-1 text-xs;
+.account__stats-grid {
+  @apply grid grid-cols-1 sm:grid-cols-3 gap-3;
 }
 
-.account__status--pending {
+.account__stat-card {
+  @apply flex flex-col gap-1 rounded-xl border border-white/8 p-4;
+  background-color: rgb(255 255 255 / 0.02);
+}
+
+.account__stat-label {
+  @apply text-muted text-xs;
+}
+
+.account__stat-value {
+  @apply font-display text-2xl;
+}
+
+.account__tabs-bar {
+  @apply flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3 pt-2;
+}
+
+.account__tabs {
+  @apply flex items-center gap-2 overflow-x-auto;
+  scrollbar-width: none;
+}
+
+.account__tab {
+  @apply rounded-full border border-white/10 px-4 py-1.5 text-xs text-muted transition-colors cursor-pointer whitespace-nowrap;
+  background-color: rgb(255 255 255 / 0.02);
+}
+
+.account__tab:hover {
+  @apply text-cream;
+}
+
+.account__tab--active {
+  @apply border-gold-400 text-gold-200 font-medium;
+  background-color: rgb(213 177 99 / 0.12);
+}
+
+.account__refresh-btn {
+  @apply text-xs py-1;
+}
+
+.account__list {
+  @apply flex flex-col gap-4;
+}
+
+.account__card {
+  @apply rounded-xl border border-white/10 p-5 transition-all;
+  background-color: rgb(15 14 20 / 0.7);
+}
+
+.account__card:hover {
+  border-color: rgb(213 177 99 / 0.25);
+}
+
+.account__card-top {
+  @apply flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/8;
+}
+
+.account__when {
+  @apply flex items-baseline gap-3;
+}
+
+.account__time {
+  @apply font-display text-2xl font-medium text-gold-300 tabular-nums;
+}
+
+.account__date {
+  @apply text-sm text-cream font-medium;
+}
+
+.account__card-badges {
+  @apply flex items-center gap-2;
+}
+
+.account__status-badge {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium border;
+}
+
+.account__status-dot {
+  @apply size-1.5 rounded-full;
+}
+
+.account__status-badge--pending {
+  @apply border-gold-400/40 text-gold-200 bg-gold-400/10;
+}
+.account__status-badge--pending .account__status-dot {
+  @apply bg-gold-400 animate-pulse;
+}
+
+.account__status-badge--confirmed {
+  @apply border-emerald-400/40 text-emerald-200 bg-emerald-400/10;
+}
+.account__status-badge--confirmed .account__status-dot {
+  @apply bg-emerald-400;
+}
+
+.account__status-badge--cancelled {
+  @apply border-red-400/40 text-red-200 bg-red-400/10;
+}
+.account__status-badge--cancelled .account__status-dot {
+  @apply bg-red-400;
+}
+
+.account__id-badge {
+  @apply text-[0.68rem] text-muted font-mono rounded border border-white/10 px-2 py-0.5;
+}
+
+.account__card-body {
+  @apply py-4 flex flex-col gap-4;
+}
+
+.account__details-row {
+  @apply grid grid-cols-2 sm:grid-cols-4 gap-3;
+}
+
+.account__detail-item {
+  @apply flex flex-col gap-0.5;
+}
+
+.account__detail-label {
+  @apply text-[0.68rem] uppercase tracking-wider text-muted;
+}
+
+.account__detail-val {
+  @apply text-xs sm:text-sm text-cream;
+}
+
+.account__comment-box {
+  @apply flex items-start gap-2 rounded-lg border border-white/5 bg-white/[0.02] p-2.5 text-xs;
+}
+
+.account__comment-label {
+  @apply text-muted whitespace-nowrap;
+}
+
+.account__comment-text {
+  @apply text-cream italic;
+}
+
+.account__preorder-box {
+  @apply rounded-xl border border-gold-400/30 p-3.5 flex flex-col gap-2.5;
+  background-color: rgb(213 177 99 / 0.05);
+}
+
+.account__preorder-head {
+  @apply flex items-center justify-between text-xs font-medium;
+}
+
+.account__preorder-title {
+  @apply text-gold-300 font-semibold tracking-wide uppercase text-[0.68rem];
+}
+
+.account__preorder-total {
+  @apply text-cream tabular-nums;
+}
+
+.account__preorder-total strong {
   @apply text-gold-200;
 }
 
-.account__status--confirmed {
-  @apply text-emerald-200;
+.account__preorder-items {
+  @apply divide-y divide-white/5 flex flex-col text-xs;
 }
 
-.account__status--cancelled {
-  @apply text-red-200;
+.account__preorder-item {
+  @apply flex items-center justify-between py-1.5 gap-2;
 }
 
-.account__cancel {
-  @apply justify-start px-0 text-red-200/80 hover:text-red-200 sm:justify-self-end;
+.account__dish-name {
+  @apply text-cream font-medium;
+}
+
+.account__dish-qty {
+  @apply text-muted text-[0.72rem] tabular-nums;
+}
+
+.account__dish-subtotal {
+  @apply text-gold-200 font-medium tabular-nums text-right;
+}
+
+.account__preorder-note {
+  @apply text-[0.65rem] text-muted italic;
+}
+
+.account__card-footer {
+  @apply flex items-center justify-between gap-3 pt-3 border-t border-white/8 text-xs;
+}
+
+.account__created {
+  @apply text-muted text-[0.68rem];
+}
+
+.account__cancel-btn {
+  @apply text-red-200/80 hover:text-red-200 hover:bg-red-500/10;
+}
+
+.account__cancelled-label {
+  @apply text-red-300/80 text-xs italic;
 }
 
 .account__state,
 .account__empty {
-  @apply mt-6 border border-white/10 bg-ink-900/50 px-5 py-10 text-center text-sm text-muted;
-}
-
-.account__empty a {
-  @apply text-gold-300 hover:text-gold-100 mt-3 inline-block underline underline-offset-4;
+  @apply rounded-xl border border-white/10 p-10 text-center text-sm text-muted;
+  background-color: rgb(15 14 20 / 0.5);
 }
 
 .account__error {
-  @apply mt-5 border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm text-red-200;
+  @apply rounded-xl border border-red-400/30 bg-red-400/10 p-3.5 text-xs text-red-200;
 }

@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { cancelUserBooking, createBooking, getBookings, getBookingsForUser, getSlots, getTables, updateBookingStatus, } from './booking.store.js';
+import { cancelUserBooking, createBooking, getAdminHallOccupancy, getBookings, getBookingsForUser, getSlots, getTables, updateBookingStatus, } from './booking.store.js';
+import { getMenuItems, validateAndSanitizePreorder, } from './menu.store.js';
 import { createSessionCookie, expiredSessionCookie, requireAuth, requireRole, } from './auth.js';
 import { findUserByEmail, registerUser, seedAdminFromEnv, verifyPassword, } from './auth.store.js';
 const app = express();
@@ -60,6 +61,9 @@ app.post('/api/auth/logout', (_req, res) => {
 app.get('/api/message', (req, res) => {
     res.json({ text: 'Привет из Express + TypeScript!' });
 });
+app.get('/api/menu', (_req, res) => {
+    res.json(getMenuItems());
+});
 app.get('/api/bookings/slots', (req, res) => {
     const date = req.query['date'];
     if (typeof date !== 'string') {
@@ -76,6 +80,15 @@ app.get('/api/tables/availability', (req, res) => {
         return;
     }
     res.json(getTables(date, time));
+});
+app.get('/api/admin/hall-status', requireAuth, requireRole('admin'), (req, res) => {
+    const date = req.query['date'];
+    const time = req.query['time'];
+    if (typeof date !== 'string' || typeof time !== 'string') {
+        res.status(400).json({ message: 'Укажите дату и время для просмотра зала.' });
+        return;
+    }
+    res.json(getAdminHallOccupancy(date, time));
 });
 app.get('/api/bookings', requireAuth, requireRole('admin'), (_req, res) => {
     res.json(getBookings());
@@ -100,6 +113,7 @@ app.post('/api/bookings', requireAuth, requireRole('user'), (req, res) => {
         res.status(400).json({ message: 'Проверьте имя, телефон и комментарий.' });
         return;
     }
+    const preorder = validateAndSanitizePreorder(body.preorder);
     try {
         const booking = createBooking({
             date: body.date,
@@ -109,6 +123,7 @@ app.post('/api/bookings', requireAuth, requireRole('user'), (req, res) => {
             name,
             phone,
             ...(comment ? { comment } : {}),
+            ...(preorder ? { preorder } : {}),
         }, req.authUser.id);
         res.status(201).json(booking);
     }

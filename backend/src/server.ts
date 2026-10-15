@@ -4,6 +4,7 @@ import cors from 'cors';
 import {
     cancelUserBooking,
     createBooking,
+    getAdminHallOccupancy,
     getBookings,
     getBookingsForUser,
     getSlots,
@@ -12,6 +13,10 @@ import {
     type BookingRequest,
     type BookingStatus,
 } from './booking.store.js';
+import {
+    getMenuItems,
+    validateAndSanitizePreorder,
+} from './menu.store.js';
 import {
     createSessionCookie,
     expiredSessionCookie,
@@ -87,6 +92,10 @@ app.get('/api/message', (req, res) => {
     res.json({ text: 'Привет из Express + TypeScript!' });
 });
 
+app.get('/api/menu', (_req, res) => {
+    res.json(getMenuItems());
+});
+
 app.get('/api/bookings/slots', (req, res) => {
     const date = req.query['date'];
     if (typeof date !== 'string') {
@@ -106,6 +115,16 @@ app.get('/api/tables/availability', (req, res) => {
     res.json(getTables(date, time));
 });
 
+app.get('/api/admin/hall-status', requireAuth, requireRole('admin'), (req, res) => {
+    const date = req.query['date'];
+    const time = req.query['time'];
+    if (typeof date !== 'string' || typeof time !== 'string') {
+        res.status(400).json({ message: 'Укажите дату и время для просмотра зала.' });
+        return;
+    }
+    res.json(getAdminHallOccupancy(date, time));
+});
+
 app.get('/api/bookings', requireAuth, requireRole('admin'), (_req, res) => {
     res.json(getBookings());
 });
@@ -115,7 +134,7 @@ app.get('/api/bookings/mine', requireAuth, requireRole('user'), (req, res) => {
 });
 
 app.post('/api/bookings', requireAuth, requireRole('user'), (req, res) => {
-    const body = (req.body ?? {}) as Partial<BookingRequest>;
+    const body = (req.body ?? {}) as Partial<BookingRequest> & { preorder?: unknown };
     if (
         typeof body.date !== 'string' || typeof body.time !== 'string' ||
         typeof body.tableId !== 'string' || typeof body.name !== 'string' ||
@@ -135,6 +154,8 @@ app.post('/api/bookings', requireAuth, requireRole('user'), (req, res) => {
         return;
     }
 
+    const preorder = validateAndSanitizePreorder(body.preorder);
+
     try {
         const booking = createBooking({
             date: body.date,
@@ -144,6 +165,7 @@ app.post('/api/bookings', requireAuth, requireRole('user'), (req, res) => {
             name,
             phone,
             ...(comment ? { comment } : {}),
+            ...(preorder ? { preorder } : {}),
         }, req.authUser!.id);
         res.status(201).json(booking);
     } catch (error) {

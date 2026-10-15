@@ -22,6 +22,15 @@ const TABLES = [
     { id: 'T12', seats: 10, zone: 'Отдельный зал', position: 't12' },
 ];
 function mapBooking(row) {
+    let parsedPreorder;
+    if (row.preorder) {
+        try {
+            parsedPreorder = JSON.parse(row.preorder);
+        }
+        catch {
+            parsedPreorder = undefined;
+        }
+    }
     return {
         id: row.id,
         date: row.date,
@@ -31,13 +40,14 @@ function mapBooking(row) {
         name: row.name,
         phone: row.phone,
         ...(row.comment ? { comment: row.comment } : {}),
+        ...(parsedPreorder && parsedPreorder.length > 0 ? { preorder: parsedPreorder } : {}),
         status: row.status,
         createdAt: row.createdAt,
         table: row.table,
     };
 }
 const bookingColumns = `
-  id, date, time, guests, table_id AS tableId, name, phone, comment, status,
+  id, date, time, guests, table_id AS tableId, name, phone, comment, preorder, status,
   created_at AS createdAt, table_label AS "table"
 `;
 function parseDateTime(date, time) {
@@ -108,6 +118,36 @@ export function getTables(date, time) {
         available: Boolean(validSlot && isBookable(date, time) && !conflicts(table.id, date, time)),
     }));
 }
+export function getAdminHallOccupancy(date, time) {
+    const validSlot = SLOT_TIMES.includes(time) && parseDateTime(date, time);
+    if (!validSlot || isClosedDay(date)) {
+        return TABLES.map((table) => ({
+            ...table,
+            available: false,
+        }));
+    }
+    const requestedStart = toMinutes(time);
+    const requestedEnd = requestedStart + BOOKING_DURATION_MINUTES;
+    const rows = database.prepare(`
+    SELECT ${bookingColumns} FROM bookings
+    WHERE date = ? AND status != 'Cancelled'
+  `).all(date);
+    const bookingsOnDate = rows.map(mapBooking);
+    return TABLES.map((table) => {
+        const activeBooking = bookingsOnDate.find((b) => {
+            if (b.tableId !== table.id)
+                return false;
+            const bStart = toMinutes(b.time);
+            const bEnd = bStart + BOOKING_DURATION_MINUTES;
+            return requestedStart < bEnd && requestedEnd > bStart;
+        });
+        return {
+            ...table,
+            available: !activeBooking,
+            activeBooking,
+        };
+    });
+}
 export function createBooking(input, ownerId) {
     const table = TABLES.find((item) => item.id === input.tableId);
     const startsAt = parseDateTime(input.date, input.time);
@@ -134,9 +174,9 @@ export function createBooking(input, ownerId) {
         database.prepare(`
       INSERT INTO bookings (
         id, owner_id, date, time, guests, table_id, name, phone, comment,
-        status, created_at, table_label
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)
-    `).run(id, ownerId, input.date, input.time, input.guests, input.tableId, input.name, input.phone, input.comment ?? null, createdAt, tableLabel);
+        preorder, status, created_at, table_label
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)
+    `).run(id, ownerId, input.date, input.time, input.guests, input.tableId, input.name, input.phone, input.comment ?? null, input.preorder && input.preorder.length > 0 ? JSON.stringify(input.preorder) : null, createdAt, tableLabel);
         database.exec('COMMIT');
     }
     catch (error) {
@@ -154,7 +194,7 @@ export function getBookings() {
 export function getBookingsForUser(ownerId) {
     const rows = database.prepare(`
     SELECT ${bookingColumns} FROM bookings
-    WHERE owner_id = ? ORDER BY date, time, created_at
+    WHERE owner_id = ? ORDER BY date DESC, time DESC, created_at DESC
   `).all(ownerId);
     return rows.map(mapBooking);
 }

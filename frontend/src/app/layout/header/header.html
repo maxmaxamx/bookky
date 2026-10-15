@@ -20,16 +20,16 @@
       <a class="hdr__phone" [href]="site.phoneHref">{{ site.phoneDisplay }}</a>
 
       @if (auth.user()?.role !== 'admin') {
-        <a class="btn btn-gold btn-sm hidden sm:inline-flex" routerLink="/booking"> Забронировать </a>
+        <a class="btn btn-gold btn-sm hidden sm:inline-flex" routerLink="/booking">Забронировать</a>
       }
 
       @if (auth.user(); as user) {
-        <a class="hdr__account hidden lg:inline-flex" [routerLink]="user.role === 'admin' ? '/admin' : '/account'">
+        <a class="btn btn-outline btn-sm hidden lg:inline-flex" [routerLink]="user.role === 'admin' ? '/admin' : '/account'">
           {{ user.role === 'admin' ? 'Панель' : 'Кабинет' }}
         </a>
-        <button class="hdr__signout hidden lg:inline-flex" type="button" (click)="signOut()">Выйти</button>
+        <button class="btn btn-outline btn-sm hidden lg:inline-flex" type="button" (click)="signOut()">Выйти</button>
       } @else {
-        <a class="hdr__account hidden lg:inline-flex" routerLink="/login">Войти</a>
+        <a class="btn btn-outline btn-sm hidden lg:inline-flex" routerLink="/login">Войти</a>
       }
 
       <!-- Кнопка мобильного меню -->
@@ -74,21 +74,31 @@
           >
         }
 
-        <a class="btn btn-gold btn-lg mt-3 w-full" routerLink="/booking" (click)="closeMenu()">
-          Забронировать столик
-        </a>
         <a class="hdr__menuPhone" [href]="site.phoneHref">
           {{ site.phoneDisplay }}
         </a>
-        @if (auth.user(); as user) {
-          <a class="hdr__menuLink" [routerLink]="user.role === 'admin' ? '/admin' : '/account'" (click)="closeMenu()">
-            {{ user.role === 'admin' ? 'Панель управления' : 'Мои бронирования' }}
-          </a>
-          <button class="hdr__menuAuth" type="button" (click)="signOut()">Выйти</button>
-        } @else {
-          <a class="hdr__menuLink" routerLink="/login" (click)="closeMenu()">Войти</a>
-          <a class="hdr__menuLink" routerLink="/register" (click)="closeMenu()">Создать аккаунт</a>
-        }
+
+        <div class="mt-4 flex flex-col gap-2.5 pt-4 border-t border-white/10">
+          @if (auth.user()?.role !== 'admin') {
+            <a class="btn btn-gold btn-md w-full" routerLink="/booking" (click)="closeMenu()">
+              Забронировать столик
+            </a>
+          }
+
+          @if (auth.user(); as user) {
+            <a class="btn btn-outline btn-md w-full" [routerLink]="user.role === 'admin' ? '/admin' : '/account'" (click)="closeMenu()">
+              {{ user.role === 'admin' ? 'Панель управления' : 'Личный кабинет' }}
+            </a>
+            <button class="btn btn-outline btn-md w-full" type="button" (click)="signOut(); closeMenu()">
+              Выйти
+            </button>
+          } @else {
+            <div class="grid grid-cols-2 gap-2">
+              <a class="btn btn-outline btn-md text-center" routerLink="/login" (click)="closeMenu()">Войти</a>
+              <a class="btn btn-outline btn-md text-center" routerLink="/register" (click)="closeMenu()">Регистрация</a>
+            </div>
+          }
+        </div>
       </div>
     </nav>
   }

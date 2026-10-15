@@ -16,7 +16,7 @@
 
       <div class="hero__actions">
         <a class="btn btn-gold btn-lg" routerLink="/booking">Забронировать столик</a>
-        <a class="btn btn-outline btn-lg" routerLink="/" fragment="menu">Смотреть меню</a>
+        <a class="btn btn-outline btn-lg" routerLink="/menu">Смотреть меню</a>
       </div>
 
       <dl class="hero__stats">
@@ -79,24 +79,61 @@
     <app-section-heading
       eyebrow="Меню"
       title="Блюда, которые стоит попробовать"
-      description="Небольшая подборка из основного меню — полная карта ждёт вас в зале."
+      description="Небольшая подборка из основного меню — полная карта ждёт вас на странице меню."
     />
 
-    <div class="menu__grid">
-      @for (dish of dishes; track dish.name) {
-        <article class="surface dish group">
-          <div class="dish__head">
-            <h3 class="dish__name">{{ dish.name }}</h3>
-            <span class="dish__price">{{ dish.price }}</span>
-          </div>
+    @if (loading()) {
+      <div class="menu__grid mt-14">
+        @for (i of [0,1,2,3,4,5]; track i) {
+          <div class="skeleton" style="aspect-ratio: 4/5; border-radius: 1rem;"></div>
+        }
+      </div>
+    } @else {
+      <div class="menu__grid">
+        @for (dish of dishes(); track dish.id) {
+          <article class="dish-card group">
+            @if (dish.image) {
+              <div class="dish-card__img-wrap">
+                <img
+                  class="dish-card__img"
+                  [src]="dish.image"
+                  [alt]="dish.name"
+                  loading="lazy"
+                />
+                @if (dish.tag) {
+                  <span class="dish-card__badge">{{ dish.tag }}</span>
+                }
+              </div>
+            }
 
-          <p class="dish__text">{{ dish.description }}</p>
+            <div class="dish-card__body">
+              <div class="dish__head">
+                <h3 class="dish__name">{{ dish.name }}</h3>
+                <span class="dish__price">{{ formatRub(dish.price) }}</span>
+              </div>
 
-          @if (dish.tag) {
-            <span class="dish__tag">{{ dish.tag }}</span>
-          }
-        </article>
-      }
+              <p class="dish__text">{{ dish.description }}</p>
+
+              @if (dish.weightGrams) {
+                <span class="dish-card__weight">{{ dish.weightGrams }} г</span>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <div class="menu__cta-bar">
+      <div class="menu__cta-text">
+        <p class="text-sm font-medium text-cream">Хотите увидеть всё меню?</p>
+        <p class="text-xs text-muted mt-1 leading-relaxed">
+          Полная карта блюд с фотографиями, описаниями и ценами — на отдельной странице.
+        </p>
+      </div>
+      <div class="menu__cta-actions">
+        <a class="btn btn-outline btn-sm" routerLink="/menu">Полное меню</a>
+        <a class="btn btn-gold btn-sm" routerLink="/booking">Забронировать с предзаказом</a>
+      </div>
     </div>
   </div>
 </section>

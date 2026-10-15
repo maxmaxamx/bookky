@@ -1,0 +1,95 @@
+<section class="mn">
+  <div class="mn__shell">
+    <!-- Заголовок -->
+    <div class="mn__head">
+      <app-section-heading
+        eyebrow="Меню ресторана"
+        title="Наша карта блюд"
+        description="Авторская кухня с акцентом на сезонные продукты и открытый огонь. Мы обновляем карту четыре раза в год."
+      />
+    </div>
+
+    <!-- Фильтры категорий -->
+    <div class="mn__filters" role="tablist" aria-label="Категории меню">
+      @for (cat of categories; track cat.id) {
+        <button
+          class="mn__filter"
+          [class.mn__filter--active]="activeCategory() === cat.id"
+          role="tab"
+          [attr.aria-selected]="activeCategory() === cat.id"
+          type="button"
+          (click)="activeCategory.set(cat.id)"
+        >
+          <span class="mn__filter-icon">{{ cat.icon }}</span>
+          {{ cat.label }}
+        </button>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="mn__grid">
+        @for (i of [0,1,2,3,4,5]; track i) {
+          <div class="skeleton mn__skeleton"></div>
+        }
+      </div>
+    } @else {
+      <!-- Категория -->
+      <p class="mn__category-title">{{ categoryTitle() }}</p>
+
+      <div class="mn__grid">
+        @for (dish of filteredMenu(); track dish.id) {
+          <article class="mn__card group">
+            @if (dish.image) {
+              <div class="mn__card-img-wrap">
+                <img
+                  class="mn__card-img"
+                  [src]="dish.image"
+                  [alt]="dish.name"
+                  loading="lazy"
+                />
+                @if (dish.tag) {
+                  <span class="mn__card-badge">{{ dish.tag }}</span>
+                }
+              </div>
+            }
+
+            <div class="mn__card-body">
+              <div class="mn__card-head">
+                <h3 class="mn__card-name">{{ dish.name }}</h3>
+                <span class="mn__card-price">{{ formatRub(dish.price) }}</span>
+              </div>
+
+              <p class="mn__card-desc">{{ dish.description }}</p>
+
+              <div class="mn__card-meta">
+                @if (dish.weightGrams) {
+                  <span class="mn__card-weight">{{ dish.weightGrams }} г</span>
+                }
+                @if (dish.calories) {
+                  <span class="mn__card-weight">{{ dish.calories }} ккал</span>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (filteredMenu().length === 0) {
+        <p class="mn__empty">Блюда в данной категории появятся совсем скоро.</p>
+      }
+
+      <!-- CTA -->
+      <div class="mn__cta">
+        <div class="mn__cta-inner">
+          <div>
+            <p class="eyebrow">Предзаказ</p>
+            <p class="mn__cta-title">
+              Закажите блюда заранее — шеф начнёт готовить к вашему приходу
+            </p>
+          </div>
+          <a class="btn btn-gold btn-sm" routerLink="/booking">Забронировать с предзаказом</a>
+        </div>
+      </div>
+    }
+  </div>
+</section>

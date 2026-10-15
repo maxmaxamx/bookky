@@ -92,4 +92,8 @@ export class TimeSlots {
     }
     return plural(slot.tablesLeft, ['столик', 'столика', 'столиков']);
   }
+
+  protected tablesLabel(count: number): string {
+    return plural(count, ['столик', 'столика', 'столиков']);
+  }
 }

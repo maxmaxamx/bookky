@@ -34,15 +34,6 @@
   @apply text-muted hover:text-gold-200 hidden text-sm transition-colors xl:inline-flex;
 }
 
-.hdr__account,
-.hdr__signout {
-  @apply text-muted hover:text-gold-200 cursor-pointer text-sm transition-colors;
-}
-
-.hdr__signout {
-  @apply border-l border-white/10 pl-3;
-}
-
 .hdr__burger {
   @apply text-cream hover:text-gold-200 inline-flex size-10 items-center justify-center rounded-full border border-white/10 transition lg:hidden;
 }

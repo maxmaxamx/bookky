@@ -1,0 +1,117 @@
+<div class="dp">
+  <div class="dp__head">
+    <div>
+      <p class="dp__lead">
+        Шеф-повар начнёт приготовление блюд точно к вашему приходу. Предзаказ не обязателен — вы можете заказать всё и в зале.
+      </p>
+    </div>
+
+    @if (totalCount() > 0) {
+      <div class="dp__cart-badge">
+        <span class="dp__cart-badge-count">{{ totalCount() }} поз.</span>
+        <span class="dp__cart-badge-sum">{{ formatRub(totalPrice()) }}</span>
+        <button class="dp__cart-clear" type="button" (click)="clearAll()" title="Очистить предзаказ">✕</button>
+      </div>
+    }
+  </div>
+
+  <!-- Категории меню -->
+  <div class="dp__tabs" role="tablist" aria-label="Категории меню">
+    @for (cat of categories; track cat.id) {
+      <button
+        class="dp__tab"
+        [class.dp__tab--active]="activeCategory() === cat.id"
+        role="tab"
+        [attr.aria-selected]="activeCategory() === cat.id"
+        type="button"
+        (click)="activeCategory.set(cat.id)"
+      >
+        {{ cat.label }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="dp__loading">Загружаем карту меню…</p>
+  } @else {
+    <div class="dp__grid">
+      @for (dish of filteredMenu(); track dish.id) {
+        <article class="dp__card" [class.dp__card--selected]="getQuantity(dish.id) > 0">
+          @if (dish.image) {
+            <div class="dp__card-thumb">
+              <img
+                class="dp__card-thumb-img"
+                [src]="dish.image"
+                [alt]="dish.name"
+                loading="lazy"
+              />
+            </div>
+          }
+
+          <div class="dp__card-content">
+            <div class="dp__card-body">
+              <div class="dp__card-top">
+                <div class="dp__card-info">
+                  <h3 class="dp__dish-name">{{ dish.name }}</h3>
+                  @if (dish.weightGrams) {
+                    <span class="dp__dish-weight">{{ dish.weightGrams }} г</span>
+                  }
+                </div>
+                <span class="dp__dish-price">{{ formatRub(dish.price) }}</span>
+              </div>
+
+              <p class="dp__dish-desc">{{ dish.description }}</p>
+
+              @if (dish.tag) {
+                <span class="dp__dish-tag">{{ dish.tag }}</span>
+              }
+            </div>
+
+            <div class="dp__card-footer">
+              @if (getQuantity(dish.id) === 0) {
+                <button
+                  class="btn btn-outline btn-sm dp__add-btn"
+                  type="button"
+                  (click)="increase(dish)"
+                >
+                  + Добавить
+                </button>
+              } @else {
+                <div class="dp__counter">
+                  <button
+                    class="dp__counter-btn"
+                    type="button"
+                    (click)="decrease(dish)"
+                    [attr.aria-label]="'Уменьшить количество ' + dish.name"
+                  >
+                    −
+                  </button>
+                  <span class="dp__counter-val">{{ getQuantity(dish.id) }}</span>
+                  <button
+                    class="dp__counter-btn"
+                    type="button"
+                    (click)="increase(dish)"
+                    [attr.aria-label]="'Увеличить количество ' + dish.name"
+                  >
+                    +
+                  </button>
+                </div>
+                <span class="dp__item-total">{{ formatRub(dish.price * getQuantity(dish.id)) }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (totalCount() > 0) {
+    <div class="dp__summary-bar">
+      <div class="dp__summary-text">
+        <span>Выбрано к приходу: <strong>{{ totalCount() }} блюд(а)</strong></span>
+        <span class="dp__summary-total">На сумму: <strong>{{ formatRub(totalPrice()) }}</strong></span>
+      </div>
+      <p class="dp__summary-note">Оплата происходит в ресторане после трапезы.</p>
+    </div>
+  }
+</div>

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { database } from './database.js';
+import type { OrderItem } from './menu.store.js';
 
 export type BookingStatus = 'Pending' | 'Confirmed' | 'Cancelled';
 
@@ -11,6 +12,7 @@ export interface BookingRequest {
   name: string;
   phone: string;
   comment?: string;
+  preorder?: OrderItem[];
 }
 
 export interface Booking extends BookingRequest {
@@ -26,6 +28,10 @@ export interface RestaurantTable {
   zone: string;
   position: string;
   available: boolean;
+}
+
+export interface AdminTableDetail extends RestaurantTable {
+  activeBooking?: Booking;
 }
 
 export interface TimeSlot {
@@ -69,12 +75,22 @@ interface BookingRow extends Record<string, string | number | null> {
   name: string;
   phone: string;
   comment: string | null;
+  preorder: string | null;
   status: BookingStatus;
   createdAt: string;
   table: string;
 }
 
 function mapBooking(row: BookingRow): Booking {
+  let parsedPreorder: OrderItem[] | undefined;
+  if (row.preorder) {
+    try {
+      parsedPreorder = JSON.parse(row.preorder) as OrderItem[];
+    } catch {
+      parsedPreorder = undefined;
+    }
+  }
+
   return {
     id: row.id,
     date: row.date,
@@ -84,6 +100,7 @@ function mapBooking(row: BookingRow): Booking {
     name: row.name,
     phone: row.phone,
     ...(row.comment ? { comment: row.comment } : {}),
+    ...(parsedPreorder && parsedPreorder.length > 0 ? { preorder: parsedPreorder } : {}),
     status: row.status,
     createdAt: row.createdAt,
     table: row.table,
@@ -91,7 +108,7 @@ function mapBooking(row: BookingRow): Booking {
 }
 
 const bookingColumns = `
-  id, date, time, guests, table_id AS tableId, name, phone, comment, status,
+  id, date, time, guests, table_id AS tableId, name, phone, comment, preorder, status,
   created_at AS createdAt, table_label AS "table"
 `;
 
@@ -172,6 +189,40 @@ export function getTables(date: string, time: string): RestaurantTable[] {
   }));
 }
 
+export function getAdminHallOccupancy(date: string, time: string): AdminTableDetail[] {
+  const validSlot = SLOT_TIMES.includes(time) && parseDateTime(date, time);
+  if (!validSlot || isClosedDay(date)) {
+    return TABLES.map((table) => ({
+      ...table,
+      available: false,
+    }));
+  }
+
+  const requestedStart = toMinutes(time);
+  const requestedEnd = requestedStart + BOOKING_DURATION_MINUTES;
+
+  const rows = database.prepare(`
+    SELECT ${bookingColumns} FROM bookings
+    WHERE date = ? AND status != 'Cancelled'
+  `).all(date) as BookingRow[];
+  const bookingsOnDate = rows.map(mapBooking);
+
+  return TABLES.map((table) => {
+    const activeBooking = bookingsOnDate.find((b) => {
+      if (b.tableId !== table.id) return false;
+      const bStart = toMinutes(b.time);
+      const bEnd = bStart + BOOKING_DURATION_MINUTES;
+      return requestedStart < bEnd && requestedEnd > bStart;
+    });
+
+    return {
+      ...table,
+      available: !activeBooking,
+      activeBooking,
+    };
+  });
+}
+
 export function createBooking(input: BookingRequest, ownerId: string): Booking {
   const table = TABLES.find((item) => item.id === input.tableId);
   const startsAt = parseDateTime(input.date, input.time);
@@ -199,8 +250,8 @@ export function createBooking(input: BookingRequest, ownerId: string): Booking {
     database.prepare(`
       INSERT INTO bookings (
         id, owner_id, date, time, guests, table_id, name, phone, comment,
-        status, created_at, table_label
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)
+        preorder, status, created_at, table_label
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?, ?)
     `).run(
       id,
       ownerId,
@@ -211,6 +262,7 @@ export function createBooking(input: BookingRequest, ownerId: string): Booking {
       input.name,
       input.phone,
       input.comment ?? null,
+      input.preorder && input.preorder.length > 0 ? JSON.stringify(input.preorder) : null,
       createdAt,
       tableLabel,
     );
@@ -233,7 +285,7 @@ export function getBookings(): Booking[] {
 export function getBookingsForUser(ownerId: string): Booking[] {
   const rows = database.prepare(`
     SELECT ${bookingColumns} FROM bookings
-    WHERE owner_id = ? ORDER BY date, time, created_at
+    WHERE owner_id = ? ORDER BY date DESC, time DESC, created_at DESC
   `).all(ownerId) as BookingRow[];
   return rows.map(mapBooking);
 }
