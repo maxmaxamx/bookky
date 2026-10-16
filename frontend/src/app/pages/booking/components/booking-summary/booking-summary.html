@@ -22,13 +22,30 @@
     }
   </dl>
 
+  @if (preorder().length > 0) {
+    <div class="bsum__preorder">
+      <div class="bsum__preorder-head">
+        <span class="bsum__preorder-title">Предзаказ к визиту:</span>
+        <strong class="bsum__preorder-sum">{{ formatRub(preorderTotal()) }}</strong>
+      </div>
+      <ul class="bsum__preorder-list">
+        @for (item of preorder(); track item.dishId) {
+          <li class="bsum__preorder-item">
+            <span class="bsum__preorder-name">{{ item.name }}</span>
+            <span class="bsum__preorder-sub">{{ item.quantity }} × {{ formatRub(item.price) }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+
   <div>
     <div class="bsum__track">
       <span class="bsum__bar" [style.width]="progress()"></span>
     </div>
     <p class="field-hint">
       @if (isReady()) {
-        Всё готово — заполните контакты в шаге 04.
+        Всё готово — перейдите к контактам в шаге 06.
       } @else {
         Выберите время в шаге 02, чтобы продолжить.
       }

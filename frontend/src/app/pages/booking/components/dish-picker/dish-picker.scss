@@ -1,20 +1,29 @@
 @reference '../../../../../styles.css';
 
 .dp {
-  @apply flex flex-col gap-4;
+  @apply flex flex-col gap-6;
 }
 
+/* --- Шапка блока предзаказа -------------------------------------------- */
 .dp__head {
-  @apply flex flex-wrap items-center justify-between gap-3;
+  @apply flex flex-wrap items-center justify-between gap-4;
+}
+
+.dp__head-info {
+  @apply max-w-2xl;
 }
 
 .dp__lead {
-  @apply text-muted text-xs leading-relaxed max-w-xl;
+  @apply text-muted text-xs leading-relaxed sm:text-sm;
 }
 
 .dp__cart-badge {
-  @apply inline-flex items-center gap-2 rounded-full border border-gold-400/30 px-3 py-1 text-xs;
-  background-color: rgb(213 177 99 / 0.08);
+  @apply inline-flex items-center gap-2.5 rounded-full border border-gold-400/40 px-3.5 py-1.5 text-xs;
+  background-color: rgb(213 177 99 / 0.12);
+}
+
+.dp__cart-badge-icon {
+  @apply text-gold-300 text-xs font-bold;
 }
 
 .dp__cart-badge-count {
@@ -26,133 +35,235 @@
 }
 
 .dp__cart-clear {
-  @apply text-muted hover:text-cream ml-1 transition-colors cursor-pointer;
+  @apply text-muted hover:text-rose-400 ml-1 transition-colors cursor-pointer text-xs;
+}
+
+/* --- Панель инструментов: поиск и категории ---------------------------- */
+.dp__toolbar {
+  @apply flex flex-col gap-3 sm:gap-4;
+}
+
+.dp__search {
+  @apply relative flex items-center;
+}
+
+.dp__search-icon {
+  @apply absolute left-3.5 text-xs text-muted pointer-events-none;
+}
+
+.dp__search-input {
+  @apply w-full rounded-xl border border-white/10 bg-white/[0.03] pl-9 pr-9 py-2.5 text-base sm:text-xs text-cream transition-all placeholder:text-muted/60;
+  outline: none;
+}
+
+.dp__search-input:focus {
+  @apply border-gold-400/60 ring-2 ring-gold-400/20 bg-white/[0.05];
+}
+
+.dp__search-clear {
+  @apply absolute right-3 text-xs text-muted hover:text-cream cursor-pointer transition-colors;
 }
 
 .dp__tabs {
-  @apply flex items-center gap-2 overflow-x-auto pb-1 text-xs;
+  @apply flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 text-xs;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dp__tab {
-  @apply rounded-full border border-white/10 px-3.5 py-1.5 transition-colors whitespace-nowrap cursor-pointer text-muted hover:text-cream;
+  @apply inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3.5 py-1.5 transition-all whitespace-nowrap cursor-pointer text-muted hover:text-cream hover:border-gold-400/30;
   background-color: rgb(255 255 255 / 0.02);
+}
+
+.dp__tab-icon {
+  @apply text-xs;
+}
+
+.dp__tab-count {
+  @apply ml-1 rounded-full px-1.5 py-0.5 text-[0.62rem] font-medium opacity-80;
+  background-color: rgb(255 255 255 / 0.08);
 }
 
 .dp__tab--active {
   @apply border-gold-400 text-gold-200 font-medium;
-  background-color: rgb(213 177 99 / 0.12);
+  background-color: rgb(213 177 99 / 0.15);
 }
 
-.dp__loading {
-  @apply text-muted text-xs py-4 text-center;
+.dp__tab--active .dp__tab-count {
+  background-color: rgb(213 177 99 / 0.3);
+  color: #fff;
 }
 
+/* --- Состояния загрузки и пустоты --------------------------------------- */
+.dp__loading-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5;
+}
+
+.dp__skeleton {
+  @apply aspect-[4/5] rounded-2xl;
+}
+
+.dp__empty {
+  @apply text-center py-10 px-4 rounded-2xl border border-dashed border-white/10 bg-white/[0.02];
+}
+
+.dp__empty-title {
+  @apply text-cream font-medium text-sm;
+}
+
+.dp__empty-hint {
+  @apply text-muted text-xs mt-1 max-w-sm mx-auto;
+}
+
+/* --- Сетка карточек блюд ------------------------------------------------ */
 .dp__grid {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[30rem] overflow-y-auto pr-1;
-  scrollbar-width: thin;
-  scrollbar-color: rgb(213 177 99 / 0.2) transparent;
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-5;
 }
 
 .dp__card {
-  @apply flex rounded-xl border border-white/8 transition-all overflow-hidden;
-  background-color: rgb(255 255 255 / 0.02);
+  @apply flex flex-col rounded-xl sm:rounded-2xl border border-white/10 transition-all duration-300 overflow-hidden;
+  background-color: rgb(13 12 18 / 0.75);
 }
 
 .dp__card:hover {
-  border-color: rgb(213 177 99 / 0.25);
-  background-color: rgb(255 255 255 / 0.04);
+  border-color: rgb(213 177 99 / 0.35);
+  box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.5);
 }
 
 .dp__card--selected {
-  border-color: rgb(213 177 99 / 0.45);
-  background-color: rgb(213 177 99 / 0.05);
+  border-color: rgb(213 177 99 / 0.65);
+  background-color: rgb(213 177 99 / 0.04);
+  box-shadow: 0 10px 25px -8px rgb(213 177 99 / 0.15);
 }
 
-/* --- Миниатюра блюда ---------------------------------------------------- */
-.dp__card-thumb {
-  @apply relative w-24 shrink-0 overflow-hidden sm:w-28;
+/* --- Медиа (фотография блюда) ------------------------------------------- */
+.dp__card-media {
+  @apply relative aspect-[16/10] w-full overflow-hidden bg-white/5;
 }
 
-.dp__card-thumb-img {
-  @apply absolute inset-0 h-full w-full object-cover;
+.dp__card-img {
+  @apply h-full w-full object-cover transition-transform duration-500;
 }
 
+.dp__card:hover .dp__card-img {
+  transform: scale(1.04);
+}
+
+.dp__card-placeholder {
+  @apply flex h-full w-full items-center justify-center text-muted;
+}
+
+.dp__card-badge {
+  @apply absolute top-3 left-3 rounded-full border border-gold-400/40 px-2.5 py-0.5 text-[0.65rem] font-semibold tracking-wider uppercase text-gold-300 backdrop-blur-md;
+  background-color: rgb(0 0 0 / 0.65);
+}
+
+.dp__card-weight {
+  @apply absolute bottom-2.5 right-2.5 rounded-full px-2 py-0.5 text-[0.65rem] font-medium text-cream/90 backdrop-blur-md;
+  background-color: rgb(0 0 0 / 0.65);
+}
+
+/* --- Содержимое карточки ------------------------------------------------ */
 .dp__card-content {
-  @apply flex flex-1 flex-col justify-between p-3.5;
+  @apply flex flex-1 flex-col justify-between p-3.5 sm:p-4 gap-2.5 sm:gap-3;
 }
 
-.dp__card-body {
-  @apply flex flex-col gap-1.5;
-}
-
-.dp__card-top {
-  @apply flex items-start justify-between gap-2;
-}
-
-.dp__card-info {
-  @apply flex items-baseline gap-2;
+.dp__card-header {
+  @apply flex items-start justify-between gap-3;
 }
 
 .dp__dish-name {
-  @apply text-sm font-medium text-cream;
-}
-
-.dp__dish-weight {
-  @apply text-[0.68rem] text-muted;
+  @apply font-display text-sm sm:text-base font-medium text-cream leading-snug;
 }
 
 .dp__dish-price {
-  @apply text-xs font-semibold text-gold-200 tabular-nums whitespace-nowrap;
+  @apply text-sm sm:text-base font-semibold text-gold-200 tabular-nums whitespace-nowrap;
 }
 
 .dp__dish-desc {
-  @apply text-xs text-muted line-clamp-2;
+  @apply text-xs text-muted leading-relaxed line-clamp-3;
 }
 
-.dp__dish-tag {
-  @apply self-start inline-block text-[0.62rem] font-medium tracking-wide uppercase px-2 py-0.5 rounded-full border border-gold-400/30 text-gold-300;
-  background-color: rgb(213 177 99 / 0.08);
+.dp__dish-meta {
+  @apply flex items-center gap-2 text-[0.68rem] text-muted;
 }
 
+.dp__dish-cal {
+  @apply rounded border border-white/10 px-1.5 py-0.5;
+}
+
+/* --- Подвал карточки и кнопки заказа ------------------------------------ */
 .dp__card-footer {
-  @apply flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-white/5;
+  @apply pt-2.5 sm:pt-3 border-t border-white/5 mt-auto;
 }
 
 .dp__add-btn {
-  @apply text-xs py-1 px-3 w-full justify-center;
+  @apply w-full inline-flex items-center justify-center gap-2 rounded-xl border border-gold-400/35 py-2.5 px-3 text-xs font-medium tracking-wide transition-all cursor-pointer min-h-[2.5rem];
+  background-color: rgb(213 177 99 / 0.08);
+  color: var(--color-gold-200);
+}
+
+.dp__add-btn:hover {
+  @apply border-gold-400 text-black font-semibold shadow-md;
+  background-color: var(--color-gold-400);
+}
+
+.dp__add-icon {
+  @apply text-sm leading-none font-bold;
+}
+
+.dp__ordered-box {
+  @apply flex items-center justify-between gap-2 w-full;
 }
 
 .dp__counter {
-  @apply inline-flex items-center gap-2 rounded-lg border border-gold-400/40 px-2 py-0.5;
-  background-color: rgb(13 12 17 / 0.8);
+  @apply inline-flex items-center gap-2 rounded-xl border border-gold-400/50 px-2 py-1;
+  background-color: rgb(7 6 10 / 0.9);
 }
 
 .dp__counter-btn {
-  @apply text-sm text-gold-300 hover:text-white px-1.5 transition-colors cursor-pointer font-bold;
+  @apply size-6 inline-flex items-center justify-center rounded-md text-gold-300 hover:text-white hover:bg-gold-400/20 transition-colors font-bold text-sm cursor-pointer;
 }
 
 .dp__counter-val {
-  @apply text-xs font-semibold text-cream tabular-nums px-1;
+  @apply text-xs font-semibold text-cream tabular-nums px-1.5 min-w-[18px] text-center;
+}
+
+.dp__subtotal {
+  @apply flex flex-col items-end text-right;
+}
+
+.dp__subtotal-label {
+  @apply text-[0.62rem] text-muted uppercase tracking-wider;
 }
 
 .dp__item-total {
-  @apply text-xs font-medium text-gold-200 tabular-nums;
+  @apply text-sm font-semibold text-gold-200 tabular-nums;
 }
 
+/* --- Итоговая панель предзаказа ----------------------------------------- */
 .dp__summary-bar {
-  @apply flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gold-400/30 p-3 mt-1;
-  background-color: rgb(213 177 99 / 0.07);
+  @apply flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-gold-400/40 p-4.5 transition-all;
+  background-color: rgb(213 177 99 / 0.08);
+  box-shadow: 0 10px 25px -10px rgb(213 177 99 / 0.15);
 }
 
-.dp__summary-text {
-  @apply flex items-center gap-4 text-xs text-cream;
+.dp__summary-left {
+  @apply flex items-start gap-3.5 max-w-xl;
 }
 
-.dp__summary-total strong {
-  @apply text-gold-200;
+.dp__summary-icon {
+  @apply text-2xl shrink-0 mt-0.5;
+}
+
+.dp__summary-title {
+  @apply text-xs sm:text-sm text-cream font-medium;
 }
 
 .dp__summary-note {
-  @apply text-[0.68rem] text-muted;
+  @apply text-[0.68rem] text-muted mt-1 leading-relaxed;
+}
+
+.dp__summary-actions {
+  @apply shrink-0;
 }

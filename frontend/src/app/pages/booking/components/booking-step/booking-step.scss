@@ -1,7 +1,7 @@
 @reference '../../../../../styles.css';
 
 .bs {
-  @apply rounded-2xl p-5 sm:p-7;
+  @apply rounded-xl sm:rounded-2xl p-3.5 sm:p-7;
 }
 
 /* Двойной класс перекрывает border-color базового .surface. */
@@ -10,11 +10,11 @@
 }
 
 .bs__head {
-  @apply flex items-start gap-4;
+  @apply flex items-start gap-3 sm:gap-4;
 }
 
 .bs__badge {
-  @apply font-display mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border text-sm transition;
+  @apply font-display mt-0.5 flex size-7 sm:size-9 shrink-0 items-center justify-center rounded-full border text-xs sm:text-sm transition;
 }
 
 .bs__badge--done {
@@ -26,13 +26,13 @@
 }
 
 .bs__title {
-  @apply font-display text-cream text-xl font-medium sm:text-2xl;
+  @apply font-display text-cream text-lg font-medium sm:text-2xl;
 }
 
 .bs__hint {
-  @apply text-muted mt-1 text-sm leading-relaxed;
+  @apply text-muted mt-0.5 text-xs sm:text-sm leading-relaxed;
 }
 
 .bs__body {
-  @apply mt-6;
+  @apply mt-4 sm:mt-6;
 }

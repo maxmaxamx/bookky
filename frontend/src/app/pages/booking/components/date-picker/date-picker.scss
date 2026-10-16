@@ -2,11 +2,11 @@
 
 /* --- Быстрый выбор даты ------------------------------------------------- */
 .dp-quick {
-  @apply no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1;
+  @apply no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1;
 }
 
 .dp-chip {
-  @apply rounded-full border px-4 py-2 text-xs whitespace-nowrap transition sm:text-sm;
+  @apply rounded-full border px-3 py-1.5 text-xs whitespace-nowrap transition sm:px-4 sm:py-2 sm:text-sm min-h-[2.25rem] inline-flex items-center shrink-0;
 }
 
 .dp-chip--on {
@@ -18,24 +18,24 @@
 }
 
 .dp-chip__note {
-  @apply ml-2 text-[0.65rem] opacity-70;
+  @apply ml-1.5 text-[0.62rem] opacity-70;
 }
 
 /* --- Календарь ---------------------------------------------------------- */
 .dp-layout {
-  @apply grid gap-6 lg:grid-cols-[minmax(0,19rem)_1fr];
+  @apply grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,19rem)_1fr];
 }
 
 .dp-calendar {
-  @apply rounded-2xl border border-white/10 bg-ink-950/50 p-4;
+  @apply rounded-xl sm:rounded-2xl border border-white/10 bg-ink-950/50 p-3 sm:p-4;
 }
 
 .dp-nav {
-  @apply text-cream flex size-9 items-center justify-center rounded-full border border-white/10 transition hover:border-gold-400/40 hover:text-gold-200 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:text-cream;
+  @apply text-cream flex size-8 sm:size-9 items-center justify-center rounded-full border border-white/10 transition hover:border-gold-400/40 hover:text-gold-200 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/10 disabled:hover:text-cream;
 }
 
 .dp-month {
-  @apply font-display text-cream text-lg whitespace-nowrap;
+  @apply font-display text-cream text-base sm:text-lg whitespace-nowrap;
 }
 
 .dp-grid {
@@ -43,11 +43,11 @@
 }
 
 .dp-weekday {
-  @apply text-muted py-1 text-center text-[0.65rem] tracking-wider uppercase;
+  @apply text-muted py-1 text-center text-[0.62rem] sm:text-[0.65rem] tracking-wider uppercase;
 }
 
 .dp-day {
-  @apply text-cream/75 flex h-9 w-full items-center justify-center rounded-full text-sm transition;
+  @apply text-cream/75 flex h-8 sm:h-9 w-full items-center justify-center rounded-full text-xs sm:text-sm transition;
 }
 
 /* Модификаторы объявлены после базового класса, чтобы перекрывать его. */
@@ -69,11 +69,11 @@
 
 /* --- Легенда ------------------------------------------------------------ */
 .dp-selected {
-  @apply font-display text-cream mt-3 text-2xl font-light;
+  @apply font-display text-cream mt-2 sm:mt-3 text-xl sm:text-2xl font-light;
 }
 
 .dp-legend {
-  @apply text-muted flex flex-wrap gap-x-6 gap-y-3 text-xs;
+  @apply text-muted flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-2 text-xs;
 
   li {
     @apply flex items-center gap-2;
@@ -81,7 +81,7 @@
 }
 
 .dp-legend__dot {
-  @apply size-3 rounded-full bg-white/10;
+  @apply size-2.5 sm:size-3 rounded-full bg-white/10;
 
   &--today {
     @apply border border-gold-400/40 bg-transparent;

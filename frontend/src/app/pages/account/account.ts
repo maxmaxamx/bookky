@@ -6,7 +6,7 @@ import { BookingService } from '../../core/services/booking.service';
 import { AuthService } from '../../core/services/auth.service';
 import { formatDateLong, fromIsoDate, guestsLabel, toIsoDate } from '../../core/utils/date.util';
 
-type AccountTab = 'upcoming' | 'all' | 'history';
+type AccountTab = 'upcoming' | 'all' | 'cancelled';
 
 @Component({
   imports: [RouterLink, DatePipe],
@@ -25,32 +25,33 @@ export class Account {
 
   protected readonly todayIso = toIsoDate(new Date());
 
-  protected readonly upcomingBookings = computed(() =>
-    this.bookings().filter(
-      (b) => b.status !== 'Cancelled' && b.date >= this.todayIso,
-    ),
+  /** Актуальные бронирования без просроченных прошедших дней. */
+  protected readonly validBookings = computed(() =>
+    this.bookings().filter((b) => b.date >= this.todayIso),
   );
 
-  protected readonly historyBookings = computed(() =>
-    this.bookings().filter(
-      (b) => b.status === 'Cancelled' || b.date < this.todayIso,
-    ),
+  protected readonly upcomingBookings = computed(() =>
+    this.validBookings().filter((b) => b.status !== 'Cancelled'),
+  );
+
+  protected readonly cancelledBookings = computed(() =>
+    this.validBookings().filter((b) => b.status === 'Cancelled'),
   );
 
   protected readonly displayedBookings = computed(() => {
     switch (this.activeTab()) {
       case 'upcoming':
         return this.upcomingBookings();
-      case 'history':
-        return this.historyBookings();
+      case 'cancelled':
+        return this.cancelledBookings();
       case 'all':
       default:
-        return this.bookings();
+        return this.validBookings();
     }
   });
 
   protected readonly stats = computed(() => {
-    const all = this.bookings();
+    const all = this.validBookings();
     const upcoming = this.upcomingBookings();
     const totalPreorderItems = upcoming.reduce((acc, b) => {
       const items = b.preorder ?? [];

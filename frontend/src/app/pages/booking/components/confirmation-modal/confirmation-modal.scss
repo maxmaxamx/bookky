@@ -9,32 +9,32 @@
 }
 
 .cm__panel {
-  @apply animate-pop bg-ink-900 relative max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-[1.75rem] border border-gold-400/25 shadow-[0_50px_140px_-50px_rgb(0_0_0_/_0.95)] sm:rounded-[1.75rem];
+  @apply animate-pop bg-ink-900 relative max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl border border-gold-400/25 shadow-[0_50px_140px_-50px_rgb(0_0_0_/_0.95)] sm:rounded-[1.75rem];
 }
 
 .cm__head {
-  @apply px-6 pt-10 pb-7 text-center sm:px-10;
+  @apply px-4 pt-6 pb-4 text-center sm:px-10 sm:pt-10 sm:pb-7;
   background-image: radial-gradient(90% 130% at 50% 0%, rgb(201 162 39 / 0.22), transparent 65%);
 }
 
 .cm__icon {
-  @apply border-gold-400/40 bg-gold-400/10 text-gold-200 mx-auto flex size-16 items-center justify-center rounded-full border;
+  @apply border-gold-400/40 bg-gold-400/10 text-gold-200 mx-auto flex size-12 sm:size-16 items-center justify-center rounded-full border;
 }
 
 .cm__title {
-  @apply font-display text-cream mt-6 text-2xl font-light sm:text-3xl;
+  @apply font-display text-cream mt-4 text-xl sm:text-3xl font-light;
 }
 
 .cm__lead {
-  @apply text-muted mt-3 text-sm leading-relaxed;
+  @apply text-muted mt-2 sm:mt-3 text-xs sm:text-sm leading-relaxed;
 }
 
 .cm__details {
-  @apply grid grid-cols-2 gap-x-5 gap-y-6 border-t border-white/10 px-6 py-7 sm:px-10;
+  @apply grid grid-cols-1 min-[420px]:grid-cols-2 gap-x-4 gap-y-3.5 sm:gap-x-5 sm:gap-y-6 border-t border-white/10 px-4 py-5 sm:px-10 sm:py-7;
 }
 
 .cm__row--wide {
-  @apply col-span-2;
+  @apply col-span-1 min-[420px]:col-span-2;
 }
 
 .cm__label {
@@ -42,13 +42,13 @@
 }
 
 .cm__value {
-  @apply text-cream mt-1.5 text-sm;
+  @apply text-cream mt-1 text-xs sm:text-sm;
 }
 
 .cm__note {
-  @apply text-muted px-6 text-xs leading-relaxed sm:px-10;
+  @apply text-muted px-4 text-xs leading-relaxed sm:px-10;
 }
 
 .cm__actions {
-  @apply flex flex-col gap-3 px-6 py-7 sm:flex-row sm:px-10;
+  @apply flex flex-col gap-2.5 px-4 py-5 sm:flex-row sm:gap-3 sm:px-10 sm:py-7;
 }

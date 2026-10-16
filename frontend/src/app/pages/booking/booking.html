@@ -25,6 +25,7 @@
     <div class="bk__grid">
       <div class="bk__steps">
         <app-booking-step
+          id="booking-step-01"
           step="01"
           title="Дата визита"
           hint="Календарь показывает только доступные дни — понедельник у нас выходной."
@@ -33,6 +34,7 @@
         </app-booking-step>
 
         <app-booking-step
+          id="booking-step-02"
           step="02"
           title="Время визита"
           [hint]="
@@ -51,6 +53,7 @@
         </app-booking-step>
 
         <app-booking-step
+          id="booking-step-03"
           step="03"
           title="Количество гостей"
           hint="Количество гостей поможет отфильтровать столы по вместимости."
@@ -59,6 +62,7 @@
         </app-booking-step>
 
         <app-booking-step
+          id="booking-step-04"
           step="04"
           title="Столик в зале"
           hint="Выберите свободный стол на схеме. Занятые и неподходящие по вместимости столы недоступны."
@@ -74,15 +78,21 @@
         </app-booking-step>
 
         <app-booking-step
+          id="booking-step-05"
           step="05"
           title="Предзаказ блюд"
-          hint="По желанию: выберите блюда заранее, чтобы кухня приготовила их к вашему приходу."
+          [hint]="
+            preorder().length > 0
+              ? 'Выбрано позиций: ' + preorder().length + '. Шеф-повар начнёт готовить блюда к вашему приходу.'
+              : 'По желанию: выберите блюда заранее, чтобы кухня приготовила их к вашему приходу.'
+          "
           [done]="preorder().length > 0"
         >
           <app-dish-picker [(items)]="preorder" />
         </app-booking-step>
 
         <app-booking-step
+          id="booking-step-06"
           step="06"
           title="Контактные данные"
           hint="Нужны, чтобы подтвердить бронь и предупредить об изменениях."
@@ -108,6 +118,44 @@
       </aside>
     </div>
   </div>
+
+  <!-- Мобильная плавающая плашка сводки заказа (видна на экранах < xl) -->
+  <aside class="bk__mobile-bar xl:hidden" aria-label="Быстрая сводка бронирования">
+    <div class="bk__mobile-bar-inner">
+      <div class="bk__mobile-bar-info">
+        <div class="bk__mobile-bar-main">
+          <span class="bk__mobile-bar-date">{{ dateLabel() }}</span>
+          <span class="bk__mobile-bar-sep">·</span>
+          <span class="bk__mobile-bar-time" [class.text-gold-300]="time()">
+            {{ time() ?? 'время не выбрано' }}
+          </span>
+        </div>
+        <div class="bk__mobile-bar-sub">
+          <span>{{ guests() }} гостей</span>
+          @if (tableLabel()) {
+            <span>· {{ tableLabel() }}</span>
+          }
+          @if (preorder().length > 0) {
+            <span class="bk__mobile-bar-preorder">· {{ preorder().length }} блюд ({{ formatRub(preorderTotal()) }})</span>
+          }
+        </div>
+      </div>
+
+      <button
+        class="btn btn-gold btn-sm bk__mobile-bar-action"
+        type="button"
+        (click)="scrollToNextStep()"
+      >
+        @if (!time()) {
+          Выбрать время
+        } @else if (!tableId()) {
+          Выбрать стол
+        } @else {
+          Оформить бронь
+        }
+      </button>
+    </div>
+  </aside>
 </section>
 
 

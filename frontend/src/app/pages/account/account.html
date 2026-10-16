@@ -32,7 +32,7 @@
         <strong class="account__stat-value text-cream">{{ stats().preordersCount }}</strong>
       </div>
       <div class="account__stat-card">
-        <span class="account__stat-label">Всего резервов</span>
+        <span class="account__stat-label">Всего актуальных</span>
         <strong class="account__stat-value text-muted">{{ stats().total }}</strong>
       </div>
     </div>
@@ -54,15 +54,15 @@
           type="button"
           (click)="activeTab.set('all')"
         >
-          Все бронирования ({{ bookings().length }})
+          Все визиты ({{ validBookings().length }})
         </button>
         <button
           class="account__tab"
-          [class.account__tab--active]="activeTab() === 'history'"
+          [class.account__tab--active]="activeTab() === 'cancelled'"
           type="button"
-          (click)="activeTab.set('history')"
+          (click)="activeTab.set('cancelled')"
         >
-          История и отмены ({{ historyBookings().length }})
+          Отменённые ({{ cancelledBookings().length }})
         </button>
       </div>
 

@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { BookingConfirmation, GuestDetails, PreorderItem } from '../../core/models/booking.model';
 import { BookingService, hasBookableSlots } from '../../core/services/booking.service';
 import { SITE } from '../../core/site';
-import { addDays, startOfDay, toIsoDate } from '../../core/utils/date.util';
+import { addDays, formatDateLong, startOfDay, toIsoDate } from '../../core/utils/date.util';
 import { BookingForm } from './components/booking-form/booking-form';
 import { BookingStep } from './components/booking-step/booking-step';
 import { BookingSummary } from './components/booking-summary/booking-summary';
@@ -54,6 +54,30 @@ export class Booking {
   protected readonly guests = signal(2);
   protected readonly tableId = signal<string | null>(null);
   protected readonly preorder = signal<PreorderItem[]>([]);
+
+  protected readonly dateLabel = computed(() => formatDateLong(this.date()));
+
+  protected readonly preorderTotal = computed(() =>
+    this.preorder().reduce((acc, item) => acc + item.price * item.quantity, 0),
+  );
+
+  protected readonly isStep6Ready = computed(() =>
+    Boolean(this.time() && this.tableId()),
+  );
+
+  protected formatRub(value: number): string {
+    return `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+  }
+
+  protected scrollToNextStep(): void {
+    if (!this.time()) {
+      document.getElementById('booking-step-02')?.scrollIntoView({ behavior: 'smooth' });
+    } else if (!this.tableId()) {
+      document.getElementById('booking-step-04')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      document.getElementById('booking-step-06')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   protected readonly tableLabel = computed(() => {
     const id = this.tableId();

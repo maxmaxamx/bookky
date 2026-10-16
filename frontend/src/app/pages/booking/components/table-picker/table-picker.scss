@@ -239,6 +239,82 @@
   border: 1px solid rgb(160 154 172 / 0.5);
 }
 
+.tp__head-text {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.tp__toggle {
+  @apply inline-flex items-center rounded-full border border-white/10 p-0.5 text-xs;
+  background-color: rgb(255 255 255 / 0.03);
+}
+
+.tp__toggle-btn {
+  @apply inline-flex items-center gap-1 rounded-full px-3 py-1 transition text-muted hover:text-cream cursor-pointer text-xs;
+}
+
+.tp__toggle-btn--active {
+  @apply bg-gold-400/20 text-gold-200 font-medium;
+}
+
+.tp__toggle-icon {
+  @apply text-xs leading-none;
+}
+
+.tp__scroll-hint {
+  @apply text-[0.68rem] text-muted text-center py-1.5 px-3 bg-white/[0.02] rounded-lg border border-white/5;
+}
+
+/* --- Сетка карточек столиков (альтернативный вид) ----------------------- */
+.tp__cards-grid {
+  @apply grid grid-cols-2 min-[480px]:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 gap-2.5;
+}
+
+.tp__card {
+  @apply flex flex-col justify-between rounded-xl border border-white/10 p-3 text-left transition duration-200 cursor-pointer min-h-[5.25rem];
+  background-color: rgb(255 255 255 / 0.025);
+}
+
+.tp__card:hover:not(:disabled) {
+  @apply border-gold-400/40;
+  background-color: rgb(255 255 255 / 0.05);
+}
+
+.tp__card--selected {
+  @apply border-gold-400 text-gold-200;
+  background-color: rgb(213 177 99 / 0.12);
+  box-shadow: 0 0 0 2px rgb(213 177 99 / 0.25);
+}
+
+.tp__card--busy,
+.tp__card--small {
+  @apply opacity-35 cursor-not-allowed border-white/5;
+}
+
+.tp__card-top {
+  @apply flex items-center justify-between gap-1;
+}
+
+.tp__card-badge {
+  @apply font-display font-semibold text-xs text-gold-200 px-2 py-0.5 rounded-md border border-gold-400/30;
+  background-color: rgb(213 177 99 / 0.1);
+}
+
+.tp__card-seats {
+  @apply text-[0.68rem] text-muted tabular-nums;
+}
+
+.tp__card-zone {
+  @apply text-xs font-medium text-cream mt-1 truncate;
+}
+
+.tp__card-status {
+  @apply text-[0.62rem] text-muted mt-1;
+}
+
+.tp__card--selected .tp__card-status {
+  @apply text-gold-300 font-medium;
+}
+
 .tp__hint {
   @apply text-muted text-xs;
 }

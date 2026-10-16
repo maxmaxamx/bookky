@@ -192,6 +192,7 @@
 .account__preorder-box {
   @apply rounded-xl border border-gold-400/30 p-3.5 flex flex-col gap-2.5;
   background-color: rgb(213 177 99 / 0.05);
+
 }
 
 .account__preorder-head {
@@ -215,7 +216,8 @@
 }
 
 .account__preorder-item {
-  @apply flex items-center justify-between py-1.5 gap-2;
+  @apply grid py-1.5 gap-2;
+  grid-template-columns: 5fr 5fr 5fr;
 }
 
 .account__dish-name {

@@ -17,21 +17,39 @@ export class DishPicker {
   protected readonly menu = signal<MenuItem[]>([]);
   protected readonly loading = signal(true);
   protected readonly activeCategory = signal<CategoryFilter>('all');
+  protected readonly searchQuery = signal('');
 
-  protected readonly categories: { id: CategoryFilter; label: string }[] = [
-    { id: 'all', label: 'Все' },
-    { id: 'starters', label: 'Закуски и салаты' },
-    { id: 'mains', label: 'Горячее' },
-    { id: 'desserts', label: 'Десерты' },
-    { id: 'drinks', label: 'Напитки' },
+  protected readonly categories: { id: CategoryFilter; label: string; icon: string }[] = [
+    { id: 'all', label: 'Все блюда', icon: '🍽️' },
+    { id: 'starters', label: 'Закуски и салаты', icon: '🥗' },
+    { id: 'mains', label: 'Горячее', icon: '🥩' },
+    { id: 'desserts', label: 'Десерты', icon: '🍰' },
+    { id: 'drinks', label: 'Напитки', icon: '🍷' },
   ];
 
   protected readonly filteredMenu = computed(() => {
     const cat = this.activeCategory();
-    const list = this.menu();
-    if (cat === 'all') return list;
-    return list.filter((item) => item.category === cat);
+    const query = this.searchQuery().trim().toLowerCase();
+    let list = this.menu();
+
+    if (cat !== 'all') {
+      list = list.filter((item) => item.category === cat);
+    }
+    if (query) {
+      list = list.filter(
+        (item) =>
+          item.name.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query) ||
+          (item.tag && item.tag.toLowerCase().includes(query)),
+      );
+    }
+    return list;
   });
+
+  protected getCategoryCount(catId: CategoryFilter): number {
+    if (catId === 'all') return this.menu().length;
+    return this.menu().filter((item) => item.category === catId).length;
+  }
 
   protected readonly totalCount = computed(() =>
     this.items().reduce((acc, item) => acc + item.quantity, 0),

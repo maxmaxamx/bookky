@@ -1,19 +1,19 @@
 @reference '../../../../../styles.css';
 
 .bsum {
-  @apply flex flex-col gap-6 rounded-2xl p-6;
+  @apply flex flex-col gap-4 sm:gap-6 rounded-xl sm:rounded-2xl p-4 sm:p-6;
 }
 
 .bsum__head {
-  @apply flex items-start justify-between gap-4;
+  @apply flex items-start justify-between gap-3 sm:gap-4;
 }
 
 .bsum__date {
-  @apply font-display text-cream mt-3 text-xl leading-snug font-light;
+  @apply font-display text-cream mt-2 sm:mt-3 text-lg sm:text-xl leading-snug font-light;
 }
 
 .bsum__time {
-  @apply font-display rounded-xl border px-3 py-2 text-lg;
+  @apply font-display rounded-lg sm:rounded-xl border px-2.5 py-1.5 sm:px-3 sm:py-2 text-base sm:text-lg;
 }
 
 .bsum__time--on {
@@ -42,6 +42,39 @@
 
 .bsum__value--filled {
   @apply text-cream;
+}
+
+.bsum__preorder {
+  @apply flex flex-col gap-2 rounded-xl border border-gold-400/25 p-3.5;
+  background-color: rgb(213 177 99 / 0.06);
+}
+
+.bsum__preorder-head {
+  @apply flex items-center justify-between text-xs;
+}
+
+.bsum__preorder-title {
+  @apply text-cream font-medium;
+}
+
+.bsum__preorder-sum {
+  @apply text-gold-200 font-semibold tabular-nums;
+}
+
+.bsum__preorder-list {
+  @apply flex flex-col gap-1.5 pt-1.5 border-t border-white/5 text-xs;
+}
+
+.bsum__preorder-item {
+  @apply flex items-baseline justify-between gap-2 text-muted;
+}
+
+.bsum__preorder-name {
+  @apply truncate;
+}
+
+.bsum__preorder-sub {
+  @apply text-gold-300/90 shrink-0 tabular-nums text-[0.7rem];
 }
 
 .bsum__track {

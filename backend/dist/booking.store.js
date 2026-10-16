@@ -185,17 +185,35 @@ export function createBooking(input, ownerId) {
     }
     return getBookingById(id);
 }
+export function getTodayIso() {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+export function cleanupExpiredBookings(today = getTodayIso()) {
+    const result = database.prepare(`
+    DELETE FROM bookings WHERE date < ?
+  `).run(today);
+    return Number(result.changes);
+}
 export function getBookings() {
+    const today = getTodayIso();
+    cleanupExpiredBookings(today);
     const rows = database.prepare(`
-    SELECT ${bookingColumns} FROM bookings ORDER BY date, time, created_at
+    SELECT ${bookingColumns} FROM bookings ORDER BY date ASC, time ASC, created_at DESC
   `).all();
     return rows.map(mapBooking);
 }
 export function getBookingsForUser(ownerId) {
+    const today = getTodayIso();
+    cleanupExpiredBookings(today);
     const rows = database.prepare(`
     SELECT ${bookingColumns} FROM bookings
-    WHERE owner_id = ? ORDER BY date DESC, time DESC, created_at DESC
-  `).all(ownerId);
+    WHERE owner_id = ? AND date >= ?
+    ORDER BY date ASC, time ASC, created_at DESC
+  `).all(ownerId, today);
     return rows.map(mapBooking);
 }
 export function updateBookingStatus(id, status) {

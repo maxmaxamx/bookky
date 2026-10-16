@@ -1,15 +1,15 @@
 @reference '../../../../../styles.css';
 
 .ts {
-  @apply flex flex-col gap-5;
+  @apply flex flex-col gap-4 sm:gap-5;
 }
 
 .ts-group {
-  @apply flex flex-col gap-5;
+  @apply flex flex-col gap-4 sm:gap-5;
 }
 
 .ts-grid {
-  @apply grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5;
+  @apply grid grid-cols-3 gap-1.5 sm:gap-2 sm:grid-cols-4 lg:grid-cols-5;
 }
 
 .ts-loading {
@@ -17,12 +17,12 @@
 }
 
 .ts-period {
-  @apply text-muted text-[0.7rem] tracking-[0.2em] uppercase;
+  @apply text-muted text-[0.65rem] sm:text-[0.7rem] tracking-[0.2em] uppercase;
 }
 
 /* --- Слоты -------------------------------------------------------------- */
 .ts-slot {
-  @apply flex flex-col items-center justify-center gap-1.5 rounded-xl border px-2 py-3 transition text-center min-h-[4rem];
+  @apply flex flex-col items-center justify-center gap-1 rounded-lg sm:rounded-xl border px-1 py-2 sm:px-2 sm:py-3 transition text-center min-h-[3.25rem] sm:min-h-[4rem] cursor-pointer;
 }
 
 .ts-slot--busy {
@@ -39,11 +39,11 @@
 }
 
 .ts-slot__time {
-  @apply text-sm font-semibold tracking-wide tabular-nums;
+  @apply text-xs sm:text-sm font-semibold tracking-wide tabular-nums;
 }
 
 .ts-slot__tables {
-  @apply flex items-center justify-center gap-1 text-[0.62rem] leading-none whitespace-nowrap;
+  @apply flex items-center justify-center gap-1 text-[0.56rem] sm:text-[0.62rem] leading-none whitespace-nowrap;
 }
 
 .ts-slot__tables--busy {
@@ -51,7 +51,7 @@
 }
 
 .ts-slot__tables-count {
-  @apply inline-flex min-w-4 h-4 px-1 items-center justify-center rounded-full text-[0.58rem] font-bold tabular-nums;
+  @apply inline-flex min-w-3.5 h-3.5 sm:min-w-4 sm:h-4 px-0.5 sm:px-1 items-center justify-center rounded-full text-[0.52rem] sm:text-[0.58rem] font-bold tabular-nums;
 }
 
 /* В свободном состоянии числовой бейдж полупрозрачный золотистый */
@@ -72,24 +72,24 @@
 
 /* --- Пустое состояние --------------------------------------------------- */
 .ts-empty {
-  @apply flex flex-col items-center gap-2 rounded-2xl border border-dashed border-white/12 px-6 py-10 text-center;
+  @apply flex flex-col items-center gap-2 rounded-xl sm:rounded-2xl border border-dashed border-white/12 px-4 py-8 sm:px-6 sm:py-10 text-center;
 }
 
 .ts-empty__icon {
-  @apply border-gold-400/30 text-gold-200 flex size-11 items-center justify-center rounded-full border;
+  @apply border-gold-400/30 text-gold-200 flex size-9 sm:size-11 items-center justify-center rounded-full border;
 }
 
 .ts-empty__title {
-  @apply font-display text-cream text-lg;
+  @apply font-display text-cream text-base sm:text-lg;
 }
 
 .ts-empty__text {
-  @apply text-muted max-w-sm text-sm;
+  @apply text-muted max-w-sm text-xs sm:text-sm;
 }
 
 /* --- Подсказки ---------------------------------------------------------- */
 .ts-notes {
-  @apply text-muted flex flex-col gap-1.5 text-xs;
+  @apply text-muted flex flex-col gap-1 text-[0.68rem] sm:text-xs leading-relaxed;
 }
 
 .ts-notes__banquet {

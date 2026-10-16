@@ -54,5 +54,9 @@ export class BookingSummary {
     const steps = [true, !!this.time(), true, !!this.table()];
     return `${Math.round((steps.filter(Boolean).length / steps.length) * 100)}%`;
   });
+
+  protected formatRub(value: number): string {
+    return `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+  }
 }
 

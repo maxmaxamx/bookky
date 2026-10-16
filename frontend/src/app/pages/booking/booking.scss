@@ -1,7 +1,7 @@
 @reference '../../../styles.css';
 
 .bk {
-  @apply px-5 pt-14 pb-20 sm:px-8 lg:pt-20 lg:pb-24;
+  @apply px-4 pt-8 pb-32 sm:px-6 sm:pt-14 sm:pb-20 lg:pt-20 lg:pb-24;
 }
 
 .bk__shell {
@@ -9,7 +9,7 @@
 }
 
 .bk__head {
-  @apply flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between;
+  @apply flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between;
 }
 
 .bk__intro {
@@ -17,15 +17,15 @@
 }
 
 .bk__title {
-  @apply font-display text-cream mt-5 text-4xl leading-tight font-light sm:text-5xl;
+  @apply font-display text-cream mt-3 text-3xl leading-tight font-light sm:text-4xl lg:text-5xl;
 }
 
 .bk__lead {
-  @apply text-muted mt-5 text-sm leading-relaxed sm:text-base;
+  @apply text-muted mt-3 text-xs leading-relaxed sm:text-base;
 }
 
 .bk__facts {
-  @apply text-muted grid gap-3 text-sm sm:grid-cols-2 lg:max-w-sm lg:text-right;
+  @apply text-muted grid grid-cols-2 gap-2 text-xs sm:text-sm lg:max-w-sm lg:text-right mt-2 lg:mt-0;
 }
 
 .bk__fact {
@@ -37,7 +37,7 @@
 }
 
 .bk__grid {
-  @apply mt-12 grid gap-8 xl:grid-cols-[minmax(0,1fr)_23rem];
+  @apply mt-8 sm:mt-12 grid gap-6 lg:gap-8 xl:grid-cols-[minmax(0,1fr)_23rem];
 }
 
 .bk__steps {
@@ -46,4 +46,48 @@
 
 .bk__aside {
   @apply xl:sticky xl:top-28 xl:self-start;
+}
+
+/* --- Плавающая мобильная панель сводки ---------------------------------- */
+.bk__mobile-bar {
+  @apply fixed bottom-0 left-0 right-0 z-40 p-3 sm:p-4 backdrop-blur-xl border-t border-gold-400/25;
+  background-color: rgb(12 11 17 / 0.94);
+  box-shadow: 0 -10px 30px -5px rgb(0 0 0 / 0.6);
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+}
+
+.bk__mobile-bar-inner {
+  @apply mx-auto flex max-w-2xl items-center justify-between gap-3;
+}
+
+.bk__mobile-bar-info {
+  @apply flex min-w-0 flex-col gap-0.5;
+}
+
+.bk__mobile-bar-main {
+  @apply flex items-center gap-1.5 text-xs sm:text-sm font-medium text-cream truncate;
+}
+
+.bk__mobile-bar-date {
+  @apply truncate;
+}
+
+.bk__mobile-bar-sep {
+  @apply text-muted/60;
+}
+
+.bk__mobile-bar-time {
+  @apply font-semibold tabular-nums;
+}
+
+.bk__mobile-bar-sub {
+  @apply flex items-center gap-1.5 text-[0.68rem] text-muted truncate;
+}
+
+.bk__mobile-bar-preorder {
+  @apply text-gold-300 font-medium truncate;
+}
+
+.bk__mobile-bar-action {
+  @apply shrink-0 py-2.5 px-4 text-xs font-semibold whitespace-nowrap;
 }

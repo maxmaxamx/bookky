@@ -18,6 +18,7 @@ export class TablePicker {
   protected readonly loading = signal(false);
   protected readonly tables = signal<RestaurantTable[]>([]);
   protected readonly error = signal('');
+  protected readonly viewMode = signal<'map' | 'list'>('map');
 
   protected readonly availableCount = computed(
     () => this.tables().filter((table) => table.available && table.seats >= this.guests()).length,
